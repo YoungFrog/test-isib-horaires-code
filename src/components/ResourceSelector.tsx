@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction } from 'react'
+import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 import Select, { SelectItem } from './Select'
 import {
   CalendarCategory,
@@ -33,6 +33,7 @@ const ResourceSelector = (props: CalSelectorProps): JSX.Element => {
   const calSelectionHandler = (e: ChangeEvent<HTMLSelectElement>) => {
     const newCal = category?.items[e.target.value]
     setSelected(newCal)
+    setExpanded(false)
     history.pushState({
       category: category,
       ressource: newCal
@@ -40,23 +41,22 @@ const ResourceSelector = (props: CalSelectorProps): JSX.Element => {
       `?type=${category?.key}&ressource=${newCal?.key}`)
   }
 
+  const [expanded, setExpanded] = useState(!selected)
+
   return (
     <>
       <div className="accordion mb-3" id="calSelector">
         <div className="accordion-item">
           <h2 className="accordion-header" id="headingOne">
-            <button className="accordion-button" type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                    aria-expanded="true" aria-controls="collapseOne">
+            <button className={`accordion-button ${expanded ? '' : 'collapsed'}`} type="button"
+                    aria-expanded={expanded} aria-controls="collapseOne"
+                    onClick={() => setExpanded(!expanded)}>
               <strong>
                 {selected ? selected.name : 'Parcourir les horaires..'}
               </strong>
             </button>
           </h2>
-          <div id="collapseOne"
-               className={`accordion-collapse collapse ${!selected
-                 ? 'show'
-                 : ''}`}
+          <div className={`accordion-collapse collapse ${expanded ? 'show' : ''}`}
                aria-labelledby="headingOne" data-bs-parent="#calSelector">
             <div className="accordion-body">
               <div className="row">

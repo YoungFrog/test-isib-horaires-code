@@ -1134,19 +1134,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@popperjs/core@^2.10.1", "@popperjs/core@^2.9.2":
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.10.1.tgz#728ecd95ab207aab8a9a4e421f0422db329232be"
-  integrity sha512-HnUhk1Sy9IuKrxEMdIRCxpIqPw6BFsbYSEUO9p/hNw5sMld/+3OLMWQP80F8/db9qsv3qUjs7ZR5bS/R+iinXw==
-
-"@types/bootstrap@^5.1.4":
-  version "5.1.4"
-  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-5.1.4.tgz#f2cc03c485b53d4e9dadbfee8eb519ce1b37a871"
-  integrity sha512-VAY+o6sCKrJ7Xix/lugdvQz0PpOn7Go+fQzCXOZvIdp7E/TDaiJddInVhNB/84bk9NX6uuKFSfl2pqslNYH9aA==
-  dependencies:
-    "@popperjs/core" "^2.9.2"
-    "@types/jquery" "*"
-
 "@types/eslint-scope@^3.7.0":
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/@types/eslint-scope/-/eslint-scope-3.7.1.tgz#8dc390a7b4f9dd9f1284629efce982e41612116e"
@@ -1174,13 +1161,6 @@
   integrity sha512-9hdj6iXH64tHSLTY+Vt2eYOGzSogC+JQ2H7bdPWkuh7KXP5qLllWx++t+K9Wk556c3dkDdPws/SpMRi0sdCT1w==
   dependencies:
     "@types/node" "*"
-
-"@types/jquery@*":
-  version "3.5.6"
-  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.5.6.tgz#97ac8e36dccd8ad8ed3f3f3b48933614d9fd8cf0"
-  integrity sha512-SmgCQRzGPId4MZQKDj9Hqc6kSXFNWZFHpELkyK8AQhf8Zr6HKfCzFv9ZC1Fv3FyQttJZOlap3qYb12h61iZAIg==
-  dependencies:
-    "@types/sizzle" "*"
 
 "@types/json-schema@*", "@types/json-schema@^7.0.5", "@types/json-schema@^7.0.7", "@types/json-schema@^7.0.8":
   version "7.0.9"
@@ -1227,11 +1207,6 @@
   version "0.16.2"
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
   integrity sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==
-
-"@types/sizzle@*":
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/@types/sizzle/-/sizzle-2.3.3.tgz#ff5e2f1902969d305225a047c8a0fd5c915cebef"
-  integrity sha512-JYM8x9EGF163bEyhdJBpR2QX1R5naCJHC8ucJylJ3w9/CVBaskdQ8WqBf8MmQrd1kRvp/a4TS8HJ+bxzR7ZJYQ==
 
 "@typescript-eslint/eslint-plugin@^4.31.0":
   version "4.31.0"
@@ -1781,11 +1756,6 @@ bonjour@^3.5.0:
     dns-txt "^2.0.2"
     multicast-dns "^6.0.1"
     multicast-dns-service-types "^1.1.0"
-
-bootstrap@^5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-5.1.1.tgz#9d6eed81e08feaccedf3adaca51fe4b73a2871df"
-  integrity sha512-/jUa4sSuDZWlDLQ1gwQQR8uoYSvLJzDd8m5o6bPKh3asLAMYVZKdRCjb1joUd5WXf0WwCNzd2EjwQQhupou0dA==
 
 brace-expansion@^1.1.7:
   version "1.1.11"

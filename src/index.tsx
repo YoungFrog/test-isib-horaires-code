@@ -1,4 +1,3 @@
-import 'bootstrap'
 import ReactDOM from 'react-dom'
 import App from './components/App'
 import fetchCalendars, { CalendarConfig } from './utils/fetchCalendars'
