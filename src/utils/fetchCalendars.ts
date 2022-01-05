@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 interface calendarCategoryItem {
   key: string
   name: string,
@@ -26,14 +24,12 @@ interface calendarConfig {
 }
 
 const fetchCalendars = async () => {
-  return axios({
-    method: 'get',
-    url: `${location.origin}/config/calendars.json`,
+  return fetch(`${location.origin}/config/calendars.json`, {
     headers: {
-      Accept: 'application/json',
+      'Content-Type': 'application/json',
       'Cache-Control': 'no-cache'
     }
-  }).then(value => value.data)
+  }).then(value => value.json())
 }
 
 export {
