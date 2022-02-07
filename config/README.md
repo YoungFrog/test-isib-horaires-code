@@ -64,11 +64,11 @@ Veuillez respecter les points suivants si vous voulez survivre :
 Un tel fichier peut être généré à partir des icals. Depuis la racine du dépôt:
 1. placer les iCal dans `/ical/2021-2022/q1/{groupes,cours,profs,salles}`
 2. placer le fichier `/config/personnel.json` depuis https://github.com/HEB-ESI/he2besi-web/raw/master/jekyllsrc/_data/personnels.json
-3. Generer le fichier avec la commande ci-dessous
+3. Generer le fichier avec l'une des deux commandes ci-dessous
 ```bash
-$ yarn generate:config
+$ yarn generate:config ical/2021-2022/q2/
+$ npm run generate:config -- ical/2021-2022/q2/
 ```
-
 
 Le fichier de configuration des calendriers est fetch au chargement de la page à l'adresse `protocol://domain-name.be:port/config/calendars.json`
 Si le fichier est mal formé ou non présent, cela fait planter le site. Et c'est entièrement votre faute! 😈

@@ -6,8 +6,9 @@ const path = require('path')
 // TODO make this customizable
 const personnel = require(path.resolve('./config/personnel.json'))
 
-// TODO make this customizable
-const icalDir = path.resolve('./ical/2021-2022/q1')
+if (process.argv.length !== 3)
+    throw new Error("Give path to ical root, e.g. ./ical/2021-2022/q1")
+const icalDir = path.resolve(process.argv[2])
 
 function getBaseNameWithoutExtension (fn) {
   return path.basename(fn, '.ics')
@@ -33,7 +34,8 @@ const rules = {
     extractName (fn) {
       const basename = getBaseNameWithoutExtension(fn)
       const acr = basename.split('_')[0]
-      const nom = personnel.find((elm) => elm.acronyme === acr).nom
+      const nom = personnel.find((elm) => elm.acronyme === acr)?.nom
+      if (!nom) console.warn("Acronyme non trouvé: " + acr);
       return `${acr} - ${nom}`
     }
   },
