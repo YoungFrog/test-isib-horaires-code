@@ -1,3 +1,24 @@
 #!/bin/sh
 
-docker run --rm -it -p 8080:8080 -w /app -v $(pwd):/app node:16-alpine sh -c "yarn install && yarn serve"
+die() {
+    warn "$@"
+    exit 1
+}
+warn() {
+    printf >&2 "%s\n" "$*"
+}
+
+say() {
+    printf "%s\n" "$*"
+}
+
+if ! [ -d ical ]; then
+    die "No ical directory found. Grab it from https://github.com/HEB-ESI/heb-esi.github.io/tree/gh-pages/ical"
+fi
+
+if ! [ -f config/personnel.json ]; then
+    die "No config file found: config/personnel.json. 
+         Grab it from https://raw.githubusercontent.com/HEB-ESI/he2besi-web/master/jekyllsrc/_data/personnels.json"
+fi
+
+docker run --rm -it -p 8080:8080 -w /app -v $(pwd):/app node:16-alpine sh -c "yarn install && yarn generate:config ical/2021-2022/q2/ && yarn serve"
