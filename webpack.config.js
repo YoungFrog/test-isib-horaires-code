@@ -28,6 +28,9 @@ module.exports = {
     path: path.resolve(__dirname, './dist')
   },
   devServer: {
-    static: './'
+    static: './',
+    devMiddleware: {
+      publicPath: '/dist'
+    }
   }
 }
