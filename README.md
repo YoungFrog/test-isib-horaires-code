@@ -11,7 +11,18 @@ Use [FullCalendar][1] to display students and teachers timetables[^1].
 
 Timetables are visible at https://horaires.esi-bru.be
 
+
 # Compile and serve
+
+## From docker
+
+If you have Docker, just run
+```bash
+make
+```
+and connect to <https://localhost:8080>
+
+## From the local machine
 
 To install all the dependencies:
 
@@ -33,6 +44,8 @@ To serve locally
 $ yarn serve
 ```
 
+(See Contribute below for how to include the ics files)
+
 # Contribute
 
 Pull requests and issues are welcome.
@@ -44,9 +57,7 @@ To test locally (using `webpack devServer`) :
 - Grab a copy of the current schedule by downloading the `ical/` directory from [github][5]. A zip file is available
   via [downgit][4] ; simply unzip it here in the repository.
 
-- Create or modify `src/config/calendar.json` to point to the new calendars (cf. the README in the config folder)
-
-- Compile the source code
+- Create or modify `src/config/calendar.json` to point to the new calendars (cf. the [README in the config folder](./config/README.md))
 
 - `yarn serve` launches a local webserver, using the local schedule.
 
