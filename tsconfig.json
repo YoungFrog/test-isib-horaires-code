@@ -15,6 +15,9 @@
         "esModuleInterop": true,
         "sourceRoot": "src",
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
-    }
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "dist/"
+    },
+    "files": ["src/index.tsx"]
+    
 }
