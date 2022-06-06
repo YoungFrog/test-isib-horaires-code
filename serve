@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 die() {
     warn "$@"
@@ -12,13 +12,33 @@ say() {
     printf "%s\n" "$*"
 }
 
-if ! [ -d ical ]; then
-    die "No ical directory found. Grab it from https://github.com/HEB-ESI/heb-esi.github.io/tree/gh-pages/ical"
+if ! [[ -d ical/ ]] || ! [[ -f calendars.json ]]; then
+    
+    if [[ -e ical ]] || [[ -e calendars.json ]]
+    then
+        die "You seem to have an ical/ or calendars.json dir. Move them away and try again."
+    fi
+
+    warn "no ical/ or config file found. Trying to download them..."
+    set -o pipefail
+    reponame=heb-esi.github.io
+    repobase=https://github.com/HEB-ESI
+    branch=gh-pages
+    if wget -O- "$repobase/$repourl/archive/refs/heads/$branch.tar.gz" |
+            tar -zx --strip-components=1 "$reponame-$branch/ical" "$reponame-$branch/calendars.json"
+    then
+        warn "that seems to have worked. great !"
+    else
+        die "Could not retrieve ical + config file. Grab 'em at $repobase/$repourl/tree/$branch/ical"
+    fi
+    
 fi
 
-if ! [ -f config/personnel.json ]; then
-    die "No config file found: config/personnel.json. 
-         Grab it from https://raw.githubusercontent.com/HEB-ESI/he2besi-web/master/jekyllsrc/_data/personnels.json"
-fi
-
-docker run --rm -it -p 8080:8080 -w /app -v $(pwd):/app node:16-alpine sh -c "yarn install && yarn generate:config ical/2021-2022/q2/ && yarn serve"
+docker run --rm \
+       --user "$(id -u):$(id -g)" \
+       -it \
+       -p 8080:8080 \
+       -w /app \
+       -v "$(pwd)":/app \
+       node:16-alpine \
+       sh -c "yarn install && yarn serve"
