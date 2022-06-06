@@ -1,0 +1,43 @@
+name: youngfrogTestingThingsDeployingCode
+
+on:
+  push:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+# defined as a secret in order to be repository-dependent
+env:
+  CONFIG_FILE_URL: ${{ secrets.CALENDARS_JSON }}
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: check for config file
+        if: ${{env.CONFIG_FILE_URL == ''}}
+        run: |
+          echo "No CALENDARS_JSON secret !"
+          exit 1
+
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: build
+        run: |
+          yarn --frozen-lockfile --non-interactive
+          printf '"%s"' "$CONFIG_FILE_URL"  >src/utils/configUrl.json
+          yarn build
+          mkdir build
+          cp -r css index.html dist img LICENSE -t build
+          
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: build # The folder the action should deploy.
