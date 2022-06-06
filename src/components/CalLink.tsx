@@ -2,26 +2,29 @@ import { useState } from 'react'
 import { calendarCategoryItem } from '../utils/fetchCalendars'
 
 interface CalLinkProps {
-  selectedResource?: calendarCategoryItem
+  selectedResource?: calendarCategoryItem,
+  root?: string
 }
 
 const CalLink = (props: CalLinkProps): JSX.Element => {
-  const { selectedResource } = props
+  const { selectedResource, root } = props
 
   if (selectedResource) {
-    const url: string = `${location.host}/${selectedResource?.calendar}`
-    const gogoleUrl: string = `www.google.com/calendar/render?cid=webcal://${url}`
+    const url = new URL(selectedResource.calendar, root)
+    const urlString: string = url.toString()
+    const webCalString: string = urlString.replace(/^http/, "webcal")
+    const gogoleUrl: string = `www.google.com/calendar/render?cid=${webCalString}`
     const [copied, setCopied] = useState(false)
 
     const copyHandler = async () => {
-      await navigator.clipboard.writeText(`https://${url}`)
+      await navigator.clipboard.writeText(urlString)
       setCopied(true)
     }
 
     return (<div className={'mt-2'}>
       <label>Lien vers le calendrier</label>
       <div className="input-group">
-        <input className="form-control" value={`https://${url}`} id="ical"
+        <input className="form-control" value={urlString} id="ical"
                readOnly/>
         <button id="icalbutton" className="btn btn-dark ml-1"
                 aria-label="Copier le lien" onClick={copyHandler}>

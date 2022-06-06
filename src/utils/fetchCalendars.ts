@@ -1,3 +1,5 @@
+const configUrl : string = require('./configUrl.json')
+
 interface calendarCategoryItem {
   key: string
   name: string,
@@ -20,16 +22,18 @@ interface calendarData {
 
 interface calendarConfig {
   default?: string,
+  root?: string,
   data: calendarData
 }
 
 const fetchCalendars = async () => {
-  return fetch(`${location.origin}/config/calendars.json`, {
+  return fetch(configUrl, {
     headers: {
       'Content-Type': 'application/json',
       'Cache-Control': 'no-cache'
     }
   }).then(value => value.json())
+    .then(json => ({ ...json, root: new URL(json.root, new URL(configUrl, location.href)) }))
 }
 
 export {

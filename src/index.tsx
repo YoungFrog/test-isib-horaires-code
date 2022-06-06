@@ -7,7 +7,7 @@ import fetchCalendars, { calendarConfig } from './utils/fetchCalendars'
   const data: calendarConfig = await fetchCalendars()
 
   ReactDOM.render(
-    <App data={data?.data} default={data?.default}/>,
+    <App data={data?.data} default={data?.default} root={data?.root}/>,
     document.getElementById('root')
   )
 })()

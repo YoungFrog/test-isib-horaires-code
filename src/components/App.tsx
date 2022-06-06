@@ -13,6 +13,7 @@ import { calendarData } from '../utils/fetchCalendars'
 interface AppProps {
   data?: calendarData
   default?: string
+  root?: string
 }
 
 const App = (props: AppProps): JSX.Element => {
@@ -61,7 +62,7 @@ const App = (props: AppProps): JSX.Element => {
   // hences avoids refreshing the calendar on every re-render of our component
   const currentEvents = useMemo(() => selectedResource
     ? {
-        url: selectedResource.calendar,
+        url: (new URL(selectedResource.calendar, props.root)).toString(),
         format: 'ics'
       }
     : undefined, [selectedResource])
@@ -110,7 +111,7 @@ const App = (props: AppProps): JSX.Element => {
           }}
         />
 
-        <CalLink selectedResource={selectedResource}/>
+        <CalLink selectedResource={selectedResource} root={props.root}/>
       </main>
 
       {selectedEvent &&

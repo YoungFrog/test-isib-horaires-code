@@ -37,7 +37,7 @@ const ResourceSelector = (props: CalSelectorProps): JSX.Element => {
       category: category,
       ressource: newCal
     }, `Horaires ${newCal?.name}`,
-      `/?type=${category?.key}&ressource=${newCal?.key}`)
+      `?type=${category?.key}&ressource=${newCal?.key}`)
   }
 
   return (
