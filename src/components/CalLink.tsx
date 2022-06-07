@@ -26,11 +26,12 @@ const CalLink = (props: CalLinkProps): JSX.Element => {
       <div className="input-group">
         <input className="form-control" value={urlString} id="ical"
                readOnly/>
+        {window.isSecureContext &&
         <button id="icalbutton" className="btn btn-dark ml-1"
                 aria-label="Copier le lien" onClick={copyHandler}>
           <i className="fa fa-clipboard fa-fw" aria-hidden="true"/>
           Copier le lien
-        </button>
+        </button>}
         <a id="addToCalendar" className="btn btn-dark ml-1"
            href={`//${gogoleUrl}`}
            target="_blank" aria-label="Ajouter au calendrier" rel="noreferrer">
