@@ -17,16 +17,18 @@ const EventModal = (props: EventModalProps): JSX.Element => {
   const eventAttributes = parseDescription(description)
 
   return (
-    <div className="offcanvas offcanvas-start show" tabIndex={-1} id="offcanvas"
-         style={{ visibility: 'visible' }}>
-      <div className="offcanvas-header">
-        <h5 className="offcanvas-title"
+    <div className="modal" tabIndex={-1}
+         style={{ display: 'block' }}>
+     <div className="modal-dialog">
+     <div className="modal-content">
+      <div className="modal-header">
+        <h5 className="modal-title"
             id="offcanvasLabel">{selectedEvent?.title}</h5>
         <button type="button" className="btn-close text-reset"
-                data-bs-dismiss="offcanvas" aria-label="Close"
+                    aria-label="Close"
                 onClick={() => { setSelectedEvent(undefined) }}/>
       </div>
-      <div className="offcanvas-body">
+          <div className="modal-body">
         <table className={'table'}>
           <tbody>
           {eventAttributes.aa &&
@@ -63,6 +65,8 @@ const EventModal = (props: EventModalProps): JSX.Element => {
           </tr>}
           </tbody>
         </table>
+          </div>
+        </div>
       </div>
     </div>
   )
