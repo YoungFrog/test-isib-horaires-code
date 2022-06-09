@@ -12,7 +12,7 @@ const CalLink = (props: CalLinkProps): JSX.Element => {
   if (selectedResource) {
     const url = new URL(selectedResource.calendar, root)
     const urlString: string = url.toString()
-    const webCalString: string = urlString.replace(/^http/, "webcal")
+    const webCalString: string = urlString.replace(/^http/, 'webcal')
     const gogoleUrl: string = `www.google.com/calendar/render?cid=${webCalString}`
     const [copied, setCopied] = useState(false)
 
