@@ -17,23 +17,28 @@ interface AppProps {
 }
 
 const App = (props: AppProps): JSX.Element => {
+  if (!props.data || !props.default || !props.root) {
+    return <pre>Pas de chance, le site est cassé..</pre>
+  }
+
   const calendarsData = props.data
+
   const search = new URLSearchParams(location.search)
 
   const [selectedCategory, setSelectedCategory] = useState(
-    calendarsData && search.has('type')
-      ? calendarsData[search.get('type') ?? '']
-      : (calendarsData && props.default
-          ? calendarsData[props.default ?? '']
-          : undefined)
+    search.has('type')
+      ? calendarsData[search.get('type')!]
+      : calendarsData[props.default]
   )
   const [selectedResource, setSelectedResource] = useState(
     search.has('ressource')
-      ? selectedCategory?.items[search.get('ressource') ?? '']
+      ? selectedCategory.items[search.get('ressource')!]
       : undefined
   )
   const [selectedEvent, setSelectedEvent] = useState(
     undefined as EventApi | undefined)
+
+  const calendarUrl = selectedResource && (new URL(selectedResource.calendar, props.root)).toString()
 
   useEffect(() => {
     const defaultTitle : string = 'ESI Horaires'
@@ -54,15 +59,11 @@ const App = (props: AppProps): JSX.Element => {
     setSelectedResource(e.state.ressource)
   })
 
-  if (!calendarsData) {
-    return <pre>Pas de chance, le site est cassé..</pre>
-  }
-
   // useMemo avoids re-creating the {url, format} object
   // hences avoids refreshing the calendar on every re-render of our component
   const currentEvents = useMemo(() => selectedResource
     ? {
-        url: (new URL(selectedResource.calendar, props.root)).toString(),
+        url: calendarUrl,
         format: 'ics'
       }
     : undefined, [selectedResource])
@@ -111,7 +112,7 @@ const App = (props: AppProps): JSX.Element => {
           }}
         />
 
-        <CalLink selectedResource={selectedResource} root={props.root}/>
+        <CalLink link={calendarUrl}/>
       </main>
 
       {selectedEvent &&

@@ -9,7 +9,7 @@ import {
 interface CalSelectorProps {
   items: CalendarData,
   category?: CalendarCategory,
-  setCategory: Dispatch<SetStateAction<CalendarCategory | undefined>>
+  setCategory: Dispatch<SetStateAction<CalendarCategory>>
   selected?: CalendarCategoryItem,
   setSelected: Dispatch<SetStateAction<CalendarCategoryItem | undefined>>
 }
