@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { calendarCategoryItem } from '../utils/fetchCalendars'
+import { CalendarCategoryItem } from '../utils/fetchCalendars'
 
 interface CalLinkProps {
-  selectedResource?: calendarCategoryItem,
+  selectedResource?: CalendarCategoryItem,
   root?: string
 }
 

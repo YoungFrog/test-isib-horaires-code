@@ -1,17 +1,17 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react'
 import Select, { SelectItem } from './Select'
 import {
-  calendarCategory,
-  calendarCategoryItem,
-  calendarData
+  CalendarCategory,
+  CalendarCategoryItem,
+  CalendarData
 } from '../utils/fetchCalendars'
 
 interface CalSelectorProps {
-  items: calendarData,
-  category?: calendarCategory,
-  setCategory: Dispatch<SetStateAction<calendarCategory | undefined>>
-  selected?: calendarCategoryItem,
-  setSelected: Dispatch<SetStateAction<calendarCategoryItem | undefined>>
+  items: CalendarData,
+  category?: CalendarCategory,
+  setCategory: Dispatch<SetStateAction<CalendarCategory | undefined>>
+  selected?: CalendarCategoryItem,
+  setSelected: Dispatch<SetStateAction<CalendarCategoryItem | undefined>>
 }
 
 const ResourceSelector = (props: CalSelectorProps): JSX.Element => {
@@ -26,7 +26,7 @@ const ResourceSelector = (props: CalSelectorProps): JSX.Element => {
   const categorySelectionHandler = (e: ChangeEvent<HTMLSelectElement>) => {
     const newCat = items[e.target.value]
 
-    setCategory(newCat as calendarCategory)
+    setCategory(newCat as CalendarCategory)
     setSelected(undefined)
   }
 

@@ -1,10 +1,10 @@
 import 'bootstrap'
 import ReactDOM from 'react-dom'
 import App from './components/App'
-import fetchCalendars, { calendarConfig } from './utils/fetchCalendars'
+import fetchCalendars, { CalendarConfig } from './utils/fetchCalendars'
 
 (async () => {
-  const data: calendarConfig = await fetchCalendars()
+  const data: CalendarConfig = await fetchCalendars()
 
   ReactDOM.render(
     <App data={data?.data} default={data?.default} root={data?.root}/>,

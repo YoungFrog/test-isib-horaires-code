@@ -1,29 +1,29 @@
 const configUrl : string = require('./configUrl.json')
 
-interface calendarCategoryItem {
+interface CalendarCategoryItem {
   key: string
   name: string,
   calendar: string
 }
 
-interface calendarCategoryItems {
-  [key: string]: calendarCategoryItem
+interface CalendarCategoryItems {
+  [key: string]: CalendarCategoryItem
 }
 
-interface calendarCategory {
+interface CalendarCategory {
   key: string,
   name: string,
-  items: calendarCategoryItems
+  items: CalendarCategoryItems
 }
 
-interface calendarData {
-  [key: string]: calendarCategory
+interface CalendarData {
+  [key: string]: CalendarCategory
 }
 
-interface calendarConfig {
+interface CalendarConfig {
   default?: string,
   root?: string,
-  data: calendarData
+  data: CalendarData
 }
 
 const fetchCalendars = async () => {
@@ -37,11 +37,11 @@ const fetchCalendars = async () => {
 }
 
 export {
-  calendarCategoryItem,
-  calendarCategoryItems,
-  calendarCategory,
-  calendarData,
-  calendarConfig
+  CalendarCategoryItem,
+  CalendarCategoryItems,
+  CalendarCategory,
+  CalendarData,
+  CalendarConfig
 }
 
 export default fetchCalendars

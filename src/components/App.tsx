@@ -8,10 +8,10 @@ import { useEffect, useMemo, useState } from 'react'
 import Footer from './Footer'
 import CalLink from './CalLink'
 import EventModal from './EventModal'
-import { calendarData } from '../utils/fetchCalendars'
+import { CalendarData } from '../utils/fetchCalendars'
 
 interface AppProps {
-  data?: calendarData
+  data?: CalendarData
   default?: string
   root?: string
 }
