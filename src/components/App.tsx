@@ -97,6 +97,7 @@ const App = (props: AppProps): JSX.Element => {
           }}
           fixedWeekCount={false}
           showNonCurrentDates={false}
+          firstDay={0}
           locale={frLocale}
           timeZone="Europe/Brussels"
           events={currentEvents}
