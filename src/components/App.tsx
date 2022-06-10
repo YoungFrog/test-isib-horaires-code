@@ -118,6 +118,7 @@ const App = (props: AppProps): JSX.Element => {
 
             return event
           }}
+          viewClassNames={() => [selectedResource ? 'visible' : 'invisible']}
         />
 
         <CalLink link={calendarUrl}/>
