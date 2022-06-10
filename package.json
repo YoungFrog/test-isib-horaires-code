@@ -5,16 +5,16 @@
     "author": "Pierre BETTENS <pbettens@he2b.be>",
     "contributors": [
         {
-            "name" : "Nicolas RICHARD",
-            "email" : "nrichard@he2b.be"
+            "name": "Nicolas RICHARD",
+            "email": "nrichard@he2b.be"
         },
         {
-            "name" : "Frédéric SERVAIS",
-            "email" : "fservais@he2b.be"
+            "name": "Frédéric SERVAIS",
+            "email": "fservais@he2b.be"
         },
         {
-            "name" : "Andrew SASSOYE",
-            "email" : "andrew@sassoye.be"
+            "name": "Andrew SASSOYE",
+            "email": "andrew@sassoye.be"
         }
     ],
     "license": "MIT",
@@ -74,5 +74,10 @@
         "webpack-cli": "^4.8",
         "webpack-dev-server": "^4.2.0",
         "webpack-notifier": "^1.13"
+    },
+    "dependencies": {
+        "@fullcalendar/moment-timezone": "5.9.0",
+        "moment": "^2.29.3",
+        "moment-timezone": "^0.5.34"
     }
 }

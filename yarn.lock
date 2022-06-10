@@ -1057,6 +1057,14 @@
     "@fullcalendar/common" "~5.9.0"
     tslib "^2.1.0"
 
+"@fullcalendar/moment-timezone@5.9.0":
+  version "5.9.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/moment-timezone/-/moment-timezone-5.9.0.tgz#480c93845385735a20afda81dce5618ccc2363c0"
+  integrity sha512-fKuojOPp+QG7I57umhL1cDLnCC9HIOkl6wN5aXPlZHhewjeNCoX+YVW5xcbRzG2N3lkDjUbnBPai7Js8OkXIjA==
+  dependencies:
+    "@fullcalendar/common" "~5.9.0"
+    tslib "^2.1.0"
+
 "@fullcalendar/react@^5.9.0":
   version "5.9.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-5.9.0.tgz#2948d28185517ddab65ad4c06dbab56e11f24ea7"
@@ -3892,6 +3900,18 @@ mkdirp@^0.5.0, mkdirp@^0.5.5:
   integrity sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==
   dependencies:
     minimist "^1.2.5"
+
+moment-timezone@^0.5.34:
+  version "0.5.34"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.34.tgz#a75938f7476b88f155d3504a9343f7519d9a405c"
+  integrity sha512-3zAEHh2hKUs3EXLESx/wsgw6IQdusOT8Bxm3D9UrHPQR7zlMmzwybC8zHEM1tQ4LJwP7fcxrWr8tuBg05fFCbg==
+  dependencies:
+    moment ">= 2.9.0"
+
+"moment@>= 2.9.0", moment@^2.29.3:
+  version "2.29.3"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.3.tgz#edd47411c322413999f7a5940d526de183c031f3"
+  integrity sha512-c6YRvhEo//6T2Jz/vVtYzqBzwvPT95JBQ+smCytzf7c50oMZRsR/a4w88aD34I+/QVSfnoAnSBFPJHItlOMJVw==
 
 ms@2.0.0:
   version "2.0.0"

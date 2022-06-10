@@ -9,6 +9,7 @@ import Footer from './Footer'
 import CalLink from './CalLink'
 import EventModal from './EventModal'
 import { CalendarData } from '../utils/fetchCalendars'
+import momentTimezonePlugin from '@fullcalendar/moment-timezone'
 
 interface AppProps {
   data?: CalendarData
@@ -78,7 +79,7 @@ const App = (props: AppProps): JSX.Element => {
                           setSelected={setSelectedResource}/>
 
         <FullCalendar
-          plugins={[timeGridPlugin, dayGridPlugin, iCalendarPlugin]}
+          plugins={[timeGridPlugin, dayGridPlugin, iCalendarPlugin, momentTimezonePlugin]}
           initialView={'timeGridWeek'}
           weekends={true}
           hiddenDays={[0]}
@@ -97,6 +98,7 @@ const App = (props: AppProps): JSX.Element => {
           fixedWeekCount={false}
           showNonCurrentDates={false}
           locale={frLocale}
+          timeZone="Europe/Brussels"
           events={currentEvents}
           contentHeight={'75vh'}
           stickyHeaderDates={true}
