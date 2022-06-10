@@ -55,9 +55,14 @@ const App = (props: AppProps): JSX.Element => {
   /**
    * Si l'utilisateur retourne à la page précédente, affiche le bon calendrier
    */
-  window.addEventListener('popstate', (e) => {
+  const popStateHandler = (e: PopStateEvent) => {
     setSelectedCategory(e.state.category)
     setSelectedResource(e.state.ressource)
+  }
+
+  useEffect(() => {
+    window.addEventListener('popstate', popStateHandler)
+    return () => window.removeEventListener('popstate', popStateHandler)
   })
 
   // useMemo avoids re-creating the {url, format} object
