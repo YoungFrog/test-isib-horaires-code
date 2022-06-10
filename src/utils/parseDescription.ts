@@ -38,7 +38,7 @@ const parseDesc = (description: string) => {
         obj.lieux = value.split(', ')
         break
       case 'Type':
-        obj.type = 'type'
+        obj.type = value
         break
       default:
     }
