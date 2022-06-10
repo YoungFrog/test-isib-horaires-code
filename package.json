@@ -61,6 +61,8 @@
         "eslint-plugin-react": "^7.25.1",
         "global": "^4.4.0",
         "mini-css-extract-plugin": "^2.2.2",
+        "moment-locales-webpack-plugin": "^1.2.0",
+        "moment-timezone-data-webpack-plugin": "^1.5.0",
         "react": "^17.0",
         "react-dom": "^17.0",
         "regenerator": "^0.14.7",
