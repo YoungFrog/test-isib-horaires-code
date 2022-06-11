@@ -3,12 +3,12 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import iCalendarPlugin from '@fullcalendar/icalendar'
 import frLocale from '@fullcalendar/core/locales/fr'
-import ResourceSelector from './ResourceSelector'
 import { useMemo, useState } from 'react'
+import momentTimezonePlugin from '@fullcalendar/moment-timezone'
+import ResourceSelector from './ResourceSelector'
 import Footer from './Footer'
 import CalLink from './CalLink'
 import EventModal from './EventModal'
-import momentTimezonePlugin from '@fullcalendar/moment-timezone'
 
 const App = (props: any): JSX.Element => {
   const [selectedEvent, setSelectedEvent] = useState(null as EventApi | null)

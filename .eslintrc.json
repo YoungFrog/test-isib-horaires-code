@@ -20,13 +20,15 @@
     "plugins": [
         "react",
         "@typescript-eslint",
-        "react-hooks"
+        "react-hooks",
+        "import"
     ],
     "rules": {
         "react/react-in-jsx-scope": "off",
         "react/jsx-curly-brace-presence": "error",
         "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "warn" 
+        "react-hooks/exhaustive-deps": "warn",
+        "import/order": "error"
     },
     "settings": {
         "react": {

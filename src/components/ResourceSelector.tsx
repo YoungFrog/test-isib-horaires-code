@@ -1,6 +1,6 @@
 import { ChangeEvent, Dispatch, useEffect, useState } from 'react'
-import Select from './Select'
 import { CalendarConfig } from '../utils/fetchCalendars'
+import Select from './Select'
 
 interface ResourceSelectorProps {
   config: CalendarConfig
