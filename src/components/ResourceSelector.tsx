@@ -1,47 +1,78 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import Select, { SelectItem } from './Select'
 import {
   CalendarCategory,
-  CalendarCategoryItem,
   CalendarData
 } from '../utils/fetchCalendars'
 
-interface CalSelectorProps {
-  items: CalendarData,
-  category?: CalendarCategory,
-  setCategory: Dispatch<SetStateAction<CalendarCategory>>
-  selected?: CalendarCategoryItem,
-  setSelected: Dispatch<SetStateAction<CalendarCategoryItem | undefined>>
+interface ConfigObject {
+  data: CalendarData
+  default: string
+  root: string
 }
 
-const ResourceSelector = (props: CalSelectorProps): JSX.Element => {
+const ResourceSelector = (props: {
+   config: ConfigObject,
+   updateUrl: Function
+  }): JSX.Element => {
   const {
-    items,
-    category,
-    setCategory,
-    selected,
-    setSelected
+    config,
+    updateUrl
   } = props
 
-  const categorySelectionHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-    const newCat = items[e.target.value]
+  const search = new URLSearchParams(location.search)
 
-    setCategory(newCat as CalendarCategory)
-    setSelected(undefined)
+  const [selectedCategory, setSelectedCategory] = useState(
+    search.has('type')
+      ? config.data[search.get('type')!]
+      : config.data[config.default]
+  )
+  const [selectedResource, setSelectedResource] = useState(
+    search.has('ressource')
+      ? selectedCategory.items[search.get('ressource')!]
+      : undefined
+  )
+
+  updateUrl(selectedResource && (new URL(selectedResource.calendar, config.root)).toString())
+
+  useEffect(() => {
+    const defaultTitle : string = 'ESI Horaires'
+
+    document.title = selectedResource ? `${selectedResource.name} - ${defaultTitle}` : defaultTitle
+  }, [selectedResource])
+
+  const categorySelectionHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+    const newCat = config.data[e.target.value]
+
+    setSelectedCategory(newCat as CalendarCategory)
+    setSelectedResource(undefined)
   }
 
   const calSelectionHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-    const newCal = category?.items[e.target.value]
-    setSelected(newCal)
+    const newCal = selectedCategory?.items[e.target.value]
+    setSelectedResource(newCal)
     setExpanded(false)
     history.pushState({
-      category: category,
+      category: selectedCategory,
       ressource: newCal
     }, `Horaires ${newCal?.name}`,
-      `?type=${category?.key}&ressource=${newCal?.key}`)
+      `?type=${selectedCategory?.key}&ressource=${newCal?.key}`)
   }
 
-  const [expanded, setExpanded] = useState(!selected)
+  const [expanded, setExpanded] = useState(!selectedResource)
+
+  /**
+   * Si l'utilisateur retourne à la page précédente, affiche le bon calendrier
+   */
+  const popStateHandler = (e: PopStateEvent) => {
+    setSelectedCategory(e.state.category)
+    setSelectedResource(e.state.ressource)
+  }
+
+  useEffect(() => {
+    window.addEventListener('popstate', popStateHandler)
+    return () => window.removeEventListener('popstate', popStateHandler)
+  })
 
   return (
     <>
@@ -52,7 +83,7 @@ const ResourceSelector = (props: CalSelectorProps): JSX.Element => {
                     aria-expanded={expanded} aria-controls="collapseOne"
                     onClick={() => setExpanded(!expanded)}>
               <strong>
-                {selected ? selected.name : 'Parcourir les horaires..'}
+                {selectedResource ? selectedResource.name : 'Parcourir les horaires..'}
               </strong>
             </button>
           </h2>
@@ -61,17 +92,17 @@ const ResourceSelector = (props: CalSelectorProps): JSX.Element => {
             <div className="accordion-body">
               <div className="row">
                 <div className="col-md-3 mb-md-0">
-                  <Select name={'Type'} selected={category as SelectItem}
+                  <Select name={'Type'} selected={selectedCategory as SelectItem}
                           selectionHandler={categorySelectionHandler}
-                          items={items}/>
+                          items={config.data}/>
                 </div>
-                {category &&
+                {selectedCategory &&
                 <div className="col-md-3 mb-md-0">
                   <Select
-                    name={`Choisissez parmi les ${category.name.toLowerCase()}`}
-                    selected={selected as SelectItem}
+                    name={`Choisissez parmi les ${selectedCategory.name.toLowerCase()}`}
+                    selected={selectedResource as SelectItem}
                     selectionHandler={calSelectionHandler}
-                    items={category.items}/>
+                    items={selectedCategory.items}/>
                 </div>}
               </div>
             </div>

@@ -4,84 +4,39 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import iCalendarPlugin from '@fullcalendar/icalendar'
 import frLocale from '@fullcalendar/core/locales/fr'
 import ResourceSelector from './ResourceSelector'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import Footer from './Footer'
 import CalLink from './CalLink'
 import EventModal from './EventModal'
-import { CalendarData } from '../utils/fetchCalendars'
 import momentTimezonePlugin from '@fullcalendar/moment-timezone'
 
-interface AppProps {
-  data?: CalendarData
-  default?: string
-  root?: string
-}
-
-const App = (props: AppProps): JSX.Element => {
+const App = (props: any): JSX.Element => {
   if (!props.data || !props.default || !props.root) {
     return <pre>Pas de chance, le site est cassé..</pre>
   }
 
-  const calendarsData = props.data
-
-  const search = new URLSearchParams(location.search)
-
-  const [selectedCategory, setSelectedCategory] = useState(
-    search.has('type')
-      ? calendarsData[search.get('type')!]
-      : calendarsData[props.default]
-  )
-  const [selectedResource, setSelectedResource] = useState(
-    search.has('ressource')
-      ? selectedCategory.items[search.get('ressource')!]
-      : undefined
-  )
-  const [selectedEvent, setSelectedEvent] = useState(
-    undefined as EventApi | undefined)
-
-  const calendarUrl = selectedResource && (new URL(selectedResource.calendar, props.root)).toString()
-
-  useEffect(() => {
-    const defaultTitle : string = 'ESI Horaires'
-
-    document.title = selectedResource ? `${selectedResource.name} - ${defaultTitle}` : defaultTitle
-  }, [selectedResource])
+  const [selectedEvent, setSelectedEvent] = useState(null as EventApi | null)
+  const [calendarUrl, setCalendarUrl] = useState(null as string | null)
 
   const selectEventHandler = (e: EventClickArg) => {
     e.jsEvent.preventDefault()
     setSelectedEvent(e.event)
   }
 
-  /**
-   * Si l'utilisateur retourne à la page précédente, affiche le bon calendrier
-   */
-  const popStateHandler = (e: PopStateEvent) => {
-    setSelectedCategory(e.state.category)
-    setSelectedResource(e.state.ressource)
-  }
-
-  useEffect(() => {
-    window.addEventListener('popstate', popStateHandler)
-    return () => window.removeEventListener('popstate', popStateHandler)
-  })
-
   // useMemo avoids re-creating the {url, format} object
   // hences avoids refreshing the calendar on every re-render of our component
-  const currentEvents = useMemo(() => selectedResource
+  const currentEvents = useMemo(() => calendarUrl
     ? {
         url: calendarUrl,
         format: 'ics'
       }
-    : undefined, [selectedResource])
+    : undefined, [calendarUrl])
 
   return (
     <>
       <main className={'container-fluid mt-3'}>
-        <ResourceSelector items={calendarsData}
-                          category={selectedCategory}
-                          setCategory={setSelectedCategory}
-                          selected={selectedResource}
-                          setSelected={setSelectedResource}/>
+        <ResourceSelector config={props}
+                          updateUrl={setCalendarUrl}/>
 
         <FullCalendar
           plugins={[timeGridPlugin, dayGridPlugin, iCalendarPlugin, momentTimezonePlugin]}
@@ -118,10 +73,10 @@ const App = (props: AppProps): JSX.Element => {
 
             return event
           }}
-          viewClassNames={() => [selectedResource ? 'visible' : 'invisible']}
+          viewClassNames={() => [calendarUrl ? 'visible' : 'invisible']}
         />
 
-        <CalLink link={calendarUrl}/>
+        {calendarUrl && <CalLink link={calendarUrl}/>}
       </main>
 
       {selectedEvent &&
