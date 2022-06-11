@@ -1,17 +1,13 @@
 import { ChangeEvent, Dispatch, useEffect, useState } from 'react'
 import Select from './Select'
-import { CalendarCategory, CalendarData } from '../utils/fetchCalendars'
+import { CalendarConfig } from '../utils/fetchCalendars'
 
-interface ConfigObject {
-  data: CalendarData
-  default: string
-  root: string
+interface ResourceSelectorProps {
+  config: CalendarConfig
+  updateUrl: Dispatch<string | null>
 }
 
-const ResourceSelector = (props: {
-  config: ConfigObject
-  updateUrl: Dispatch<string | null>
-}): JSX.Element => {
+const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
   const { config, updateUrl } = props
 
   const search = new URLSearchParams(location.search)
@@ -46,7 +42,7 @@ const ResourceSelector = (props: {
   const categorySelectionHandler = (e: ChangeEvent<HTMLSelectElement>) => {
     const newCat = config.data[e.target.value]
 
-    setSelectedCategory(newCat as CalendarCategory)
+    setSelectedCategory(newCat)
     setSelectedResource(undefined)
   }
 
@@ -59,7 +55,7 @@ const ResourceSelector = (props: {
         category: selectedCategory,
         ressource: newCal
       },
-      `Horaires ${newCal?.name}`,
+      '',
       `?type=${selectedCategory?.key}&ressource=${newCal?.key}`
     )
   }

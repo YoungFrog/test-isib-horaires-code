@@ -21,12 +21,12 @@ interface CalendarData {
 }
 
 interface CalendarConfig {
-  default?: string
-  root?: string
+  default: string
+  root: string
   data: CalendarData
 }
 
-const fetchCalendars = async () => {
+const fetchCalendars = async (): Promise<CalendarConfig> => {
   return fetch(configUrl, {
     headers: {
       'Content-Type': 'application/json',
@@ -40,12 +40,6 @@ const fetchCalendars = async () => {
     }))
 }
 
-export {
-  CalendarCategoryItem,
-  CalendarCategoryItems,
-  CalendarCategory,
-  CalendarData,
-  CalendarConfig
-}
+export { CalendarConfig }
 
 export default fetchCalendars
