@@ -1,5 +1,5 @@
-import { ChangeEvent, useEffect, useState } from 'react'
-import Select, { SelectItem } from './Select'
+import { ChangeEvent, Dispatch, useEffect, useState } from 'react'
+import Select from './Select'
 import { CalendarCategory, CalendarData } from '../utils/fetchCalendars'
 
 interface ConfigObject {
@@ -10,7 +10,7 @@ interface ConfigObject {
 
 const ResourceSelector = (props: {
   config: ConfigObject
-  updateUrl: Function
+  updateUrl: Dispatch<string | null>
 }): JSX.Element => {
   const { config, updateUrl } = props
 
@@ -28,8 +28,9 @@ const ResourceSelector = (props: {
   )
 
   updateUrl(
-    selectedResource &&
-      new URL(selectedResource.calendar, config.root).toString()
+    selectedResource
+      ? new URL(selectedResource.calendar, config.root).toString()
+      : null
   )
 
   useEffect(() => {
@@ -103,7 +104,7 @@ const ResourceSelector = (props: {
                 <div className="col-md-3 mb-md-0">
                   <Select
                     name="Type"
-                    selected={selectedCategory as SelectItem}
+                    selected={selectedCategory}
                     selectionHandler={categorySelectionHandler}
                     items={config.data}
                   />
@@ -112,7 +113,7 @@ const ResourceSelector = (props: {
                   <div className="col-md-3 mb-md-0">
                     <Select
                       name={`Choisissez parmi les ${selectedCategory.name.toLowerCase()}`}
-                      selected={selectedResource as SelectItem}
+                      selected={selectedResource}
                       selectionHandler={calSelectionHandler}
                       items={selectedCategory.items}
                     />

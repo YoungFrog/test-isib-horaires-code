@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react'
+import { ChangeEvent, Dispatch } from 'react'
 
 interface SelectItem {
   key: string
@@ -11,9 +11,9 @@ interface SelectItems {
 
 interface SelectProps {
   name: string
-  selectionHandler: (e: ChangeEvent<HTMLSelectElement>) => void
+  selectionHandler: Dispatch<ChangeEvent<HTMLSelectElement>>
   items: SelectItems
-  selected: SelectItem
+  selected: SelectItem | undefined
 }
 
 const Select = (props: SelectProps): JSX.Element => {
@@ -43,7 +43,5 @@ const Select = (props: SelectProps): JSX.Element => {
     </div>
   )
 }
-
-export { SelectItem, SelectProps }
 
 export default Select
