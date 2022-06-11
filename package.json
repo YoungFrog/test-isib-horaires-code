@@ -79,6 +79,7 @@
     },
     "dependencies": {
         "@fullcalendar/moment-timezone": "^5.11.0",
+        "eslint-plugin-react-hooks": "^4.6.0-next-f7b44539c-20220610",
         "moment": "^2.29.3",
         "moment-timezone": "^0.5.34"
     }

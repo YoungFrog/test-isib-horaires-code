@@ -11,17 +11,8 @@ import EventModal from './EventModal'
 import momentTimezonePlugin from '@fullcalendar/moment-timezone'
 
 const App = (props: any): JSX.Element => {
-  if (!props.data || !props.default || !props.root) {
-    return <pre>Pas de chance, le site est cassé..</pre>
-  }
-
   const [selectedEvent, setSelectedEvent] = useState(null as EventApi | null)
   const [calendarUrl, setCalendarUrl] = useState(null as string | null)
-
-  const selectEventHandler = (e: EventClickArg) => {
-    e.jsEvent.preventDefault()
-    setSelectedEvent(e.event)
-  }
 
   // useMemo avoids re-creating the {url, format} object
   // hences avoids refreshing the calendar on every re-render of our component
@@ -35,6 +26,15 @@ const App = (props: any): JSX.Element => {
         : undefined,
     [calendarUrl]
   )
+
+  if (!props.data || !props.default || !props.root) {
+    return <pre>Pas de chance, le site est cassé..</pre>
+  }
+
+  const selectEventHandler = (e: EventClickArg) => {
+    e.jsEvent.preventDefault()
+    setSelectedEvent(e.event)
+  }
 
   return (
     <>
