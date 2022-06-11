@@ -1,9 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import Select, { SelectItem } from './Select'
-import {
-  CalendarCategory,
-  CalendarData
-} from '../utils/fetchCalendars'
+import { CalendarCategory, CalendarData } from '../utils/fetchCalendars'
 
 interface ConfigObject {
   data: CalendarData
@@ -12,13 +9,10 @@ interface ConfigObject {
 }
 
 const ResourceSelector = (props: {
-   config: ConfigObject,
-   updateUrl: Function
-  }): JSX.Element => {
-  const {
-    config,
-    updateUrl
-  } = props
+  config: ConfigObject
+  updateUrl: Function
+}): JSX.Element => {
+  const { config, updateUrl } = props
 
   const search = new URLSearchParams(location.search)
 
@@ -33,12 +27,17 @@ const ResourceSelector = (props: {
       : undefined
   )
 
-  updateUrl(selectedResource && (new URL(selectedResource.calendar, config.root)).toString())
+  updateUrl(
+    selectedResource &&
+      new URL(selectedResource.calendar, config.root).toString()
+  )
 
   useEffect(() => {
-    const defaultTitle : string = 'ESI Horaires'
+    const defaultTitle: string = 'ESI Horaires'
 
-    document.title = selectedResource ? `${selectedResource.name} - ${defaultTitle}` : defaultTitle
+    document.title = selectedResource
+      ? `${selectedResource.name} - ${defaultTitle}`
+      : defaultTitle
   }, [selectedResource])
 
   const categorySelectionHandler = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -52,11 +51,14 @@ const ResourceSelector = (props: {
     const newCal = selectedCategory?.items[e.target.value]
     setSelectedResource(newCal)
     setExpanded(false)
-    history.pushState({
-      category: selectedCategory,
-      ressource: newCal
-    }, `Horaires ${newCal?.name}`,
-      `?type=${selectedCategory?.key}&ressource=${newCal?.key}`)
+    history.pushState(
+      {
+        category: selectedCategory,
+        ressource: newCal
+      },
+      `Horaires ${newCal?.name}`,
+      `?type=${selectedCategory?.key}&ressource=${newCal?.key}`
+    )
   }
 
   const [expanded, setExpanded] = useState(!selectedResource)
@@ -79,31 +81,43 @@ const ResourceSelector = (props: {
       <div className="accordion mb-3" id="calSelector">
         <div className="accordion-item">
           <h2 className="accordion-header" id="headingOne">
-            <button className={`accordion-button ${expanded ? '' : 'collapsed'}`} type="button"
-                    aria-expanded={expanded} aria-controls="collapseOne"
-                    onClick={() => setExpanded(!expanded)}>
+            <button
+              className={`accordion-button ${expanded ? '' : 'collapsed'}`}
+              type="button"
+              aria-expanded={expanded}
+              aria-controls="collapseOne"
+              onClick={() => setExpanded(!expanded)}>
               <strong>
-                {selectedResource ? selectedResource.name : 'Parcourir les horaires..'}
+                {selectedResource
+                  ? selectedResource.name
+                  : 'Parcourir les horaires..'}
               </strong>
             </button>
           </h2>
-          <div className={`accordion-collapse collapse ${expanded ? 'show' : ''}`}
-               aria-labelledby="headingOne" data-bs-parent="#calSelector">
+          <div
+            className={`accordion-collapse collapse ${expanded ? 'show' : ''}`}
+            aria-labelledby="headingOne"
+            data-bs-parent="#calSelector">
             <div className="accordion-body">
               <div className="row">
                 <div className="col-md-3 mb-md-0">
-                  <Select name={'Type'} selected={selectedCategory as SelectItem}
-                          selectionHandler={categorySelectionHandler}
-                          items={config.data}/>
-                </div>
-                {selectedCategory &&
-                <div className="col-md-3 mb-md-0">
                   <Select
-                    name={`Choisissez parmi les ${selectedCategory.name.toLowerCase()}`}
-                    selected={selectedResource as SelectItem}
-                    selectionHandler={calSelectionHandler}
-                    items={selectedCategory.items}/>
-                </div>}
+                    name="Type"
+                    selected={selectedCategory as SelectItem}
+                    selectionHandler={categorySelectionHandler}
+                    items={config.data}
+                  />
+                </div>
+                {selectedCategory && (
+                  <div className="col-md-3 mb-md-0">
+                    <Select
+                      name={`Choisissez parmi les ${selectedCategory.name.toLowerCase()}`}
+                      selected={selectedResource as SelectItem}
+                      selectionHandler={calSelectionHandler}
+                      items={selectedCategory.items}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>

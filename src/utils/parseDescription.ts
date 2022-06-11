@@ -1,9 +1,9 @@
 interface EventAttributes {
-  aa?: string,
-  groupes?: string[],
-  profs?: string[],
-  profacro?: string,
-  lieux?: string[],
+  aa?: string
+  groupes?: string[]
+  profs?: string[]
+  profacro?: string
+  lieux?: string[]
   type?: string
 }
 

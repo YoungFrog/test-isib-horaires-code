@@ -25,22 +25,30 @@ const App = (props: any): JSX.Element => {
 
   // useMemo avoids re-creating the {url, format} object
   // hences avoids refreshing the calendar on every re-render of our component
-  const currentEvents = useMemo(() => calendarUrl
-    ? {
-        url: calendarUrl,
-        format: 'ics'
-      }
-    : undefined, [calendarUrl])
+  const currentEvents = useMemo(
+    () =>
+      calendarUrl
+        ? {
+            url: calendarUrl,
+            format: 'ics'
+          }
+        : undefined,
+    [calendarUrl]
+  )
 
   return (
     <>
-      <main className={'container-fluid mt-3'}>
-        <ResourceSelector config={props}
-                          updateUrl={setCalendarUrl}/>
+      <main className="container-fluid mt-3">
+        <ResourceSelector config={props} updateUrl={setCalendarUrl} />
 
         <FullCalendar
-          plugins={[timeGridPlugin, dayGridPlugin, iCalendarPlugin, momentTimezonePlugin]}
-          initialView={'timeGridWeek'}
+          plugins={[
+            timeGridPlugin,
+            dayGridPlugin,
+            iCalendarPlugin,
+            momentTimezonePlugin
+          ]}
+          initialView="timeGridWeek"
           weekends={true}
           hiddenDays={[0]}
           headerToolbar={{
@@ -48,8 +56,8 @@ const App = (props: any): JSX.Element => {
             center: 'title',
             end: 'dayGridMonth timeGridWeek timeGridDay'
           }}
-          slotMinTime={'08:00:00'}
-          slotMaxTime={'22:00:00'}
+          slotMinTime="08:00:00"
+          slotMaxTime="22:00:00"
           businessHours={{
             dayOfWeek: [1, 2, 3, 4, 5],
             startTime: '08:15',
@@ -61,7 +69,7 @@ const App = (props: any): JSX.Element => {
           locale={frLocale}
           timeZone="Europe/Brussels"
           events={currentEvents}
-          contentHeight={'75vh'}
+          contentHeight="75vh"
           stickyHeaderDates={true}
           eventClick={selectEventHandler}
           eventDataTransform={event => {
@@ -76,14 +84,17 @@ const App = (props: any): JSX.Element => {
           viewClassNames={() => [calendarUrl ? 'visible' : 'invisible']}
         />
 
-        {calendarUrl && <CalLink link={calendarUrl}/>}
+        {calendarUrl && <CalLink link={calendarUrl} />}
       </main>
 
-      {selectedEvent &&
-      <EventModal selectedEvent={selectedEvent}
-                  setSelectedEvent={setSelectedEvent}/>}
+      {selectedEvent && (
+        <EventModal
+          selectedEvent={selectedEvent}
+          setSelectedEvent={setSelectedEvent}
+        />
+      )}
 
-      <Footer/>
+      <Footer />
     </>
   )
 }
