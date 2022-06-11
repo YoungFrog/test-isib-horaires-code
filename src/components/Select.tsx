@@ -21,7 +21,7 @@ const Select = (props: SelectProps): JSX.Element => {
   const id = useId()
 
   return (
-    <div>
+    <div className="col-md-3 mb-md-0">
       <label className="form-label" htmlFor={id}>
         <strong>{name}</strong>
       </label>

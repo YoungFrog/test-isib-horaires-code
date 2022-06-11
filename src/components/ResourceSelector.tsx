@@ -101,23 +101,19 @@ const ResourceSelector = (props: {
             data-bs-parent="#calSelector">
             <div className="accordion-body">
               <div className="row">
-                <div className="col-md-3 mb-md-0">
-                  <Select
-                    name="Type"
-                    selected={selectedCategory}
-                    selectionHandler={categorySelectionHandler}
-                    items={config.data}
-                  />
-                </div>
+                <Select
+                  name="Type"
+                  selected={selectedCategory}
+                  selectionHandler={categorySelectionHandler}
+                  items={config.data}
+                />
                 {selectedCategory && (
-                  <div className="col-md-3 mb-md-0">
-                    <Select
-                      name={`Choisissez parmi les ${selectedCategory.name.toLowerCase()}`}
-                      selected={selectedResource}
-                      selectionHandler={calSelectionHandler}
-                      items={selectedCategory.items}
-                    />
-                  </div>
+                  <Select
+                    name={`Choisissez parmi les ${selectedCategory.name.toLowerCase()}`}
+                    selected={selectedResource}
+                    selectionHandler={calSelectionHandler}
+                    items={selectedCategory.items}
+                  />
                 )}
               </div>
             </div>
