@@ -11,17 +11,20 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
   const { config, updateUrl } = props
 
   const search = new URLSearchParams(location.search)
+  const [initialCategoryKey] = useState(search.get('type') ?? config.default)
+  const [initialResourceKey] = useState(search.get('ressource'))
 
-  const [selectedCategory, setSelectedCategory] = useState(
-    search.has('type')
-      ? config.data[search.get('type')!]
-      : config.data[config.default]
-  )
-  const [selectedResource, setSelectedResource] = useState(
-    search.has('ressource')
-      ? selectedCategory.items[search.get('ressource')!]
-      : undefined
-  )
+  const [selectedCategoryKey, setSelectedCategoryKey] =
+    useState(initialCategoryKey)
+  const [selectedResourceKey, setSelectedResourceKey] =
+    useState(initialResourceKey)
+
+  const [expanded, setExpanded] = useState(!selectedResourceKey)
+
+  const selectedCategory = config.data[selectedCategoryKey]
+  const selectedResource = selectedResourceKey
+    ? selectedCategory?.items[selectedResourceKey]
+    : undefined
 
   useEffect(() =>
     updateUrl(
@@ -40,34 +43,30 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
   }, [selectedResource])
 
   const categorySelectionHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-    const newCat = config.data[e.target.value]
-
-    setSelectedCategory(newCat)
-    setSelectedResource(undefined)
+    setSelectedCategoryKey(e.target.value)
+    setSelectedResourceKey(null)
   }
 
   const calSelectionHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-    const newCal = selectedCategory?.items[e.target.value]
-    setSelectedResource(newCal)
+    const newResourceKey = e.target.value
+    setSelectedResourceKey(newResourceKey)
     setExpanded(false)
     history.pushState(
       {
-        category: selectedCategory,
-        ressource: newCal
+        category: selectedCategoryKey,
+        resource: newResourceKey
       },
       '',
-      `?type=${selectedCategory?.key}&ressource=${newCal?.key}`
+      `?type=${selectedCategoryKey}&ressource=${newResourceKey}`
     )
   }
-
-  const [expanded, setExpanded] = useState(!selectedResource)
 
   /**
    * Si l'utilisateur retourne à la page précédente, affiche le bon calendrier
    */
   const popStateHandler = (e: PopStateEvent) => {
-    setSelectedCategory(e.state.category)
-    setSelectedResource(e.state.ressource)
+    setSelectedCategoryKey(e.state?.category || initialCategoryKey)
+    setSelectedResourceKey(e.state?.resource || initialResourceKey)
   }
 
   useEffect(() => {
@@ -87,9 +86,7 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
               aria-controls="collapseOne"
               onClick={() => setExpanded(!expanded)}>
               <strong>
-                {selectedResource
-                  ? selectedResource.name
-                  : 'Parcourir les horaires..'}
+                {selectedResource?.name ?? 'Parcourir les horaires..'}
               </strong>
             </button>
           </h2>
