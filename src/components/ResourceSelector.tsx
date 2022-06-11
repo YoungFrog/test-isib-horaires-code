@@ -27,10 +27,12 @@ const ResourceSelector = (props: {
       : undefined
   )
 
-  updateUrl(
-    selectedResource
-      ? new URL(selectedResource.calendar, config.root).toString()
-      : null
+  useEffect(() =>
+    updateUrl(
+      selectedResource
+        ? new URL(selectedResource.calendar, config.root).toString()
+        : null
+    )
   )
 
   useEffect(() => {
