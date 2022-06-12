@@ -105,15 +105,15 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
             <div className="accordion-body">
               <div className="row">
                 <Select
-                  name="Type"
-                  selectedKey={selectedCategoryKey}
+                  label="Type"
+                  initialKey={selectedCategoryKey}
                   selectionHandler={categorySelectionHandler}
                   items={mapObject(config.data, (k, v) => v.name)}
                 />
                 {selectedCategory && (
                   <Select
-                    name={`Choisissez parmi les ${selectedCategory.name.toLowerCase()}`}
-                    selectedKey={selectedCategoryKey}
+                    label={`Choisissez parmi les ${selectedCategory.name.toLowerCase()}`}
+                    initialKey={selectedCategoryKey}
                     selectionHandler={calSelectionHandler}
                     items={mapObject(selectedCategory.items, (k, v) => v.name)}
                   />

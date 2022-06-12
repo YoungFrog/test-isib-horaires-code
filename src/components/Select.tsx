@@ -1,28 +1,28 @@
 import { Dispatch, useId } from 'react'
 
 interface SelectProps {
-  name: string
+  label: string
   selectionHandler: Dispatch<string>
   items: { [key: string]: string }
-  selectedKey: string | undefined
+  initialKey: string | undefined
 }
 
 const Select = (props: SelectProps) => {
-  const { name, items, selectedKey, selectionHandler } = props
+  const { label, items, initialKey, selectionHandler } = props
   const id = useId()
 
   return (
     <div className="col-md-3 mb-md-0">
       <label className="form-label" htmlFor={id}>
-        <strong>{name}</strong>
+        <strong>{label}</strong>
       </label>
       <select
         id={id}
         className="form-control custom-select"
         onChange={e => selectionHandler(e.target.value)}
-        value={selectedKey ?? 0}>
+        value={initialKey ?? 0}>
         <option disabled value={0}>
-          {name}
+          {label}
         </option>
         {Object.entries(items).map(([key, item]) => (
           <option key={key} value={key}>
