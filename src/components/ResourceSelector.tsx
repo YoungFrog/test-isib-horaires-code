@@ -1,4 +1,4 @@
-import { Dispatch, useEffect, useState } from 'react'
+import { Dispatch, useCallback, useEffect, useState } from 'react'
 import { CalendarConfig } from '../utils/fetchCalendars'
 import Select from './Select'
 
@@ -6,24 +6,30 @@ interface ResourceSelectorProps {
   config: CalendarConfig
   updateUrl: Dispatch<string | null>
 }
+interface AppState {
+  categoryKey?: string
+  resourceKey?: string
+}
 
 const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
   const { config, updateUrl } = props
 
-  const search = new URLSearchParams(location.search)
-  const [initialCategoryKey] = useState(search.get('type') ?? config.default)
-  const [initialResourceKey] = useState(search.get('ressource'))
+  const getAppStateFromUrl = useCallback((): AppState => {
+    const search = new URLSearchParams(location.search)
+    const categoryKey = search.get('type') ?? config.default
+    const resourceKey = search.get('ressource') ?? undefined
+    return { categoryKey, resourceKey }
+  }, [config])
 
-  const [selectedCategoryKey, setSelectedCategoryKey] =
-    useState(initialCategoryKey)
-  const [selectedResourceKey, setSelectedResourceKey] =
-    useState(initialResourceKey)
+  const [appState, setAppState] = useState(getAppStateFromUrl())
 
-  const [expanded, setExpanded] = useState(!selectedResourceKey)
+  const [expanded, setExpanded] = useState(!appState.resourceKey)
 
-  const selectedCategory = config.data[selectedCategoryKey]
-  const selectedResource = selectedResourceKey
-    ? selectedCategory?.items[selectedResourceKey]
+  const selectedCategory = appState.categoryKey
+    ? config.data[appState.categoryKey]
+    : undefined
+  const selectedResource = appState.resourceKey
+    ? selectedCategory?.items[appState.resourceKey]
     : undefined
 
   useEffect(() =>
@@ -42,31 +48,42 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
       : defaultTitle
   }, [selectedResource])
 
-  const categorySelectionHandler = (newCategory: string) => {
-    setSelectedCategoryKey(newCategory)
-    setSelectedResourceKey(null)
+  const categorySelectionHandler = (newCategoryKey: string) => {
+    setAppState({ categoryKey: newCategoryKey })
   }
 
-  const calSelectionHandler = (newResourceKey: string) => {
-    setSelectedResourceKey(newResourceKey)
-    setExpanded(false)
-    history.pushState(
-      {
-        category: selectedCategoryKey,
-        resource: newResourceKey
-      },
-      '',
-      `?type=${selectedCategoryKey}&ressource=${newResourceKey}`
-    )
+  const updateWindowURL = (
+    url: URL,
+    urlKey: string,
+    value: string | undefined
+  ) => {
+    if (value) {
+      url.searchParams.set(urlKey, value)
+    } else {
+      url.searchParams.delete(urlKey)
+    }
   }
+
+  const calSelectionHandler = useCallback(
+    (newResourceKey: string) => {
+      setAppState(state => ({ ...state, resourceKey: newResourceKey }))
+      setExpanded(false)
+
+      const url = new URL(window.location.href)
+      updateWindowURL(url, 'type', appState.categoryKey)
+      updateWindowURL(url, 'ressource', newResourceKey)
+
+      history.pushState({}, '', url)
+    },
+    [appState]
+  )
 
   /**
    * Si l'utilisateur retourne à la page précédente, affiche le bon calendrier
    */
-  const popStateHandler = (e: PopStateEvent) => {
-    setSelectedCategoryKey(e.state?.category || initialCategoryKey)
-    setSelectedResourceKey(e.state?.resource || initialResourceKey)
-  }
+  const popStateHandler = useCallback((e: PopStateEvent) => {
+    setAppState(getAppStateFromUrl())
+  }, [])
 
   useEffect(() => {
     window.addEventListener('popstate', popStateHandler)
@@ -106,14 +123,14 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
               <div className="row">
                 <Select
                   label="Type"
-                  initialKey={selectedCategoryKey}
+                  initialKey={appState.categoryKey ?? null}
                   selectionHandler={categorySelectionHandler}
                   items={mapObject(config.data, (k, v) => v.name)}
                 />
                 {selectedCategory && (
                   <Select
                     label={`Choisissez parmi les ${selectedCategory.name.toLowerCase()}`}
-                    initialKey={selectedCategoryKey}
+                    initialKey={appState.resourceKey ?? null}
                     selectionHandler={calSelectionHandler}
                     items={mapObject(selectedCategory.items, (k, v) => v.name)}
                   />

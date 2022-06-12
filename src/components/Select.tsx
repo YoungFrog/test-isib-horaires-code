@@ -4,7 +4,7 @@ interface SelectProps {
   label: string
   selectionHandler: Dispatch<string>
   items: { [key: string]: string }
-  initialKey: string | undefined
+  initialKey: string | null
 }
 
 const Select = (props: SelectProps) => {
