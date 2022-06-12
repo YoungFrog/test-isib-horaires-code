@@ -1,23 +1,14 @@
-import { ChangeEvent, Dispatch, useId } from 'react'
-
-interface SelectItem {
-  key: string
-  name: string
-}
-
-interface SelectItems {
-  [key: string]: SelectItem
-}
+import { Dispatch, useId } from 'react'
 
 interface SelectProps {
   name: string
-  selectionHandler: Dispatch<ChangeEvent<HTMLSelectElement>>
-  items: SelectItems
-  selected: SelectItem | undefined
+  selectionHandler: Dispatch<string>
+  items: { [key: string]: string }
+  selectedKey: string | undefined
 }
 
-const Select = (props: SelectProps): JSX.Element => {
-  const { name, items, selected, selectionHandler } = props
+const Select = (props: SelectProps) => {
+  const { name, items, selectedKey, selectionHandler } = props
   const id = useId()
 
   return (
@@ -28,19 +19,16 @@ const Select = (props: SelectProps): JSX.Element => {
       <select
         id={id}
         className="form-control custom-select"
-        onChange={selectionHandler}
-        value={selected ? selected.key : 0}>
+        onChange={e => selectionHandler(e.target.value)}
+        value={selectedKey ?? 0}>
         <option disabled value={0}>
           {name}
         </option>
-        {items &&
-          Object.entries(items).map(([key, item]) => {
-            return (
-              <option key={key} value={key}>
-                {item.name}
-              </option>
-            )
-          })}
+        {Object.entries(items).map(([key, item]) => (
+          <option key={key} value={key}>
+            {item}
+          </option>
+        ))}
       </select>
     </div>
   )

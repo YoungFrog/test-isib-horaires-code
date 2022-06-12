@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, useEffect, useState } from 'react'
+import { Dispatch, useEffect, useState } from 'react'
 import { CalendarConfig } from '../utils/fetchCalendars'
 import Select from './Select'
 
@@ -42,13 +42,12 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
       : defaultTitle
   }, [selectedResource])
 
-  const categorySelectionHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategoryKey(e.target.value)
+  const categorySelectionHandler = (newCategory: string) => {
+    setSelectedCategoryKey(newCategory)
     setSelectedResourceKey(null)
   }
 
-  const calSelectionHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-    const newResourceKey = e.target.value
+  const calSelectionHandler = (newResourceKey: string) => {
     setSelectedResourceKey(newResourceKey)
     setExpanded(false)
     history.pushState(
@@ -74,6 +73,16 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
     return () => window.removeEventListener('popstate', popStateHandler)
   })
 
+  type KeyType = string | number
+
+  function mapObject<T, S>(
+    obj: { [k: KeyType]: T },
+    func: (k: KeyType, v: T) => S
+  ) {
+    return Object.fromEntries(
+      Object.entries(obj).map(([k, v]) => [k, func(k, v)])
+    )
+  }
   return (
     <>
       <div className="accordion mb-3" id="calSelector">
@@ -98,16 +107,16 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
               <div className="row">
                 <Select
                   name="Type"
-                  selected={selectedCategory}
+                  selectedKey={selectedCategoryKey}
                   selectionHandler={categorySelectionHandler}
-                  items={config.data}
+                  items={mapObject(config.data, (k, v) => v.name)}
                 />
                 {selectedCategory && (
                   <Select
                     name={`Choisissez parmi les ${selectedCategory.name.toLowerCase()}`}
-                    selected={selectedResource}
+                    selectedKey={selectedCategoryKey}
                     selectionHandler={calSelectionHandler}
-                    items={selectedCategory.items}
+                    items={mapObject(selectedCategory.items, (k, v) => v.name)}
                   />
                 )}
               </div>
