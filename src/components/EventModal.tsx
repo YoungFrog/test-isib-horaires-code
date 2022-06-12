@@ -1,12 +1,11 @@
-import { Dispatch, SetStateAction } from 'react'
 import { EventApi } from '@fullcalendar/react'
 import parseDescription from '../utils/parseDescription'
 
 const EventModal = (props: {
   selectedEvent: EventApi
-  setSelectedEvent: Dispatch<SetStateAction<EventApi | null>>
+  close: Function
 }): JSX.Element => {
-  const { selectedEvent, setSelectedEvent } = props
+  const { selectedEvent, close } = props
 
   const description = selectedEvent.extendedProps.description
   const eventAttributes = parseDescription(description)
@@ -21,9 +20,7 @@ const EventModal = (props: {
               type="button"
               className="btn-close text-reset"
               aria-label="Close"
-              onClick={() => {
-                setSelectedEvent(null)
-              }}
+              onClick={() => close()}
             />
           </div>
           <div className="modal-body">

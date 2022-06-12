@@ -90,7 +90,7 @@ const App = (props: any): JSX.Element => {
       {selectedEvent && (
         <EventModal
           selectedEvent={selectedEvent}
-          setSelectedEvent={setSelectedEvent}
+          close={() => setSelectedEvent(null)}
         />
       )}
 
