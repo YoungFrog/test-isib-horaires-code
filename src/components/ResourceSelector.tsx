@@ -85,7 +85,7 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
   }
   return (
     <>
-      <div className="accordion mb-3" id="calSelector">
+      <div className="accordion mb-3">
         <div className="accordion-item">
           <h2 className="accordion-header" id="headingOne">
             <button
@@ -101,8 +101,7 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
           </h2>
           <div
             className={`accordion-collapse collapse ${expanded ? 'show' : ''}`}
-            aria-labelledby="headingOne"
-            data-bs-parent="#calSelector">
+            aria-labelledby="headingOne">
             <div className="accordion-body">
               <div className="row">
                 <Select
