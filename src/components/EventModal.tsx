@@ -38,7 +38,12 @@ const EventModal = (props: {
                     <tr>
                       <th scope="row">Matière</th>
                       <td>
-                        <p>{eventAttributes.aa}</p>
+                        <p
+                          onClick={() => {
+                            switchTo(eventAttributes.aa, 'cours')
+                          }}>
+                          {eventAttributes.aa}
+                        </p>
                       </td>
                     </tr>
                   )}
@@ -67,8 +72,15 @@ const EventModal = (props: {
                     <tr>
                       <th scope="row">Professeurs</th>
                       <td>
-                        {eventAttributes.profs.map(prof => (
-                          <p key={prof}>{prof}</p>
+                        {eventAttributes.profs.map((prof, i) => (
+                          <p
+                            onClick={() => {
+                              eventAttributes.profacros &&
+                                switchTo(eventAttributes.profacros[i], 'profs')
+                            }}
+                            key={prof}>
+                            {prof}
+                          </p>
                         ))}
                       </td>
                     </tr>

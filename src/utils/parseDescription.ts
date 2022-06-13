@@ -2,7 +2,7 @@ interface EventAttributes {
   aa?: string
   groupes?: string[]
   profs?: string[]
-  profacro?: string
+  profacros?: string[]
   lieux?: string[]
   type?: string
 }
@@ -27,11 +27,10 @@ const parseDesc = (description: string) => {
       case 'Enseignant':
       case 'Enseignants':
         key = 'profs'
-        // récupérer l'acronyme du prof
-        if (value.match(/^[A-Z][A-Z][A-Z]\b/)) {
-          obj.profacro = value.slice(0, 3)
-        }
         obj.profs = value.split(', ')
+        if (obj.profs.every(prof => prof.match(/^[A-Z][A-Z][A-Z]\b/))) {
+          obj.profacros = obj.profs.map(prof => prof.slice(0, 3))
+        }
         break
       case 'Salle':
       case 'Salles':
