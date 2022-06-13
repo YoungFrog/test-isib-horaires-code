@@ -38,6 +38,6 @@ const fetchCalendars = async (): Promise<CalendarConfig> => {
     }))
 }
 
-export { CalendarConfig }
+export { CalendarConfig, Resource }
 
 export default fetchCalendars

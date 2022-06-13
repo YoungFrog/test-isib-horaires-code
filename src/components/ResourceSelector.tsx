@@ -5,7 +5,6 @@ import Select from './Select'
 
 interface ResourceSelectorProps {
   config: CalendarConfig
-  updateUrl: Dispatch<Nullable<string>>
   categoryKey: Nullable<string>
   resourceKey: Nullable<string>
   switchToResource: (res?: string, cat?: string) => void
