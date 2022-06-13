@@ -1,4 +1,4 @@
-import { Dispatch, useEffect, useState } from 'react'
+import { Dispatch, useCallback, useEffect, useState } from 'react'
 import { CalendarConfig } from '../utils/fetchCalendars'
 import { Nullable, mapObject } from '../utils/types'
 import useSearchParams from '../hooks/useSearchParams'
@@ -42,6 +42,36 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
       ? `${selectedResource.name} - ${defaultTitle}`
       : defaultTitle
   }, [selectedResource])
+
+  const nextResource = useCallback(
+    (delta: number) => {
+      if (!selectedCategory) return
+      if (!resourceKey) return
+      const resourceKeys = Object.keys(selectedCategory.items)
+      return resourceKeys[resourceKeys.indexOf(resourceKey) + delta]
+    },
+    [resourceKey, selectedCategory]
+  )
+
+  const listenArrowKeys = (e: KeyboardEvent) => {
+    if (e.shiftKey) {
+      let wantedResource
+
+      if (e.key === 'ArrowLeft') {
+        wantedResource = nextResource(-1)
+      }
+      if (e.key === 'ArrowRight') {
+        wantedResource = nextResource(1)
+      }
+
+      if (wantedResource) setResourceKey(wantedResource)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', listenArrowKeys)
+    return () => window.removeEventListener('keydown', listenArrowKeys)
+  })
 
   return (
     <>
