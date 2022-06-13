@@ -1,56 +1,29 @@
 import { Dispatch, useCallback, useEffect, useState } from 'react'
 import { CalendarConfig } from '../utils/fetchCalendars'
 import { Nullable, mapObject } from '../utils/types'
-import useSearchParams from '../hooks/useSearchParams'
 import Select from './Select'
 
 interface ResourceSelectorProps {
   config: CalendarConfig
   updateUrl: Dispatch<Nullable<string>>
+  categoryKey: Nullable<string>
+  resourceKey: Nullable<string>
+  switchToResource: (res?: string, cat?: string) => void
 }
 
 const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
-  const { config, updateUrl } = props
-
-  const [categoryKey, setCategoryKey] = useState(null as Nullable<string>)
-  const [resourceKey, setResourceKey] = useState(null as Nullable<string>)
+  const { config, categoryKey, resourceKey, switchToResource } = props
 
   const [expanded, setExpanded] = useState(!resourceKey)
-
-  useSearchParams([
-    ['type', categoryKey, setCategoryKey, config.default],
-    ['ressource', resourceKey, setResourceKey]
-  ])
-
   const selectedCategory = categoryKey ? config.data[categoryKey] : undefined
-  const selectedResource = resourceKey
-    ? selectedCategory?.items[resourceKey]
-    : undefined
-
-  useEffect(() =>
-    updateUrl(
-      selectedResource
-        ? new URL(selectedResource.calendar, config.root).toString()
-        : null
-    )
-  )
-
-  useEffect(() => {
-    const defaultTitle: string = 'ESI Horaires'
-
-    document.title = selectedResource
-      ? `${selectedResource.name} - ${defaultTitle}`
-      : defaultTitle
-  }, [selectedResource])
 
   const nextResource = useCallback(
     (delta: number) => {
-      if (!selectedCategory) return
-      if (!resourceKey) return
-      const resourceKeys = Object.keys(selectedCategory.items)
+      if (!(categoryKey && resourceKey)) return
+      const resourceKeys = Object.keys(config.data[categoryKey].items)
       return resourceKeys[resourceKeys.indexOf(resourceKey) + delta]
     },
-    [resourceKey, selectedCategory]
+    [categoryKey, config.data, resourceKey]
   )
 
   const listenArrowKeys = (e: KeyboardEvent) => {
@@ -58,13 +31,17 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
       let wantedResource
 
       if (e.key === 'ArrowLeft') {
+        e.preventDefault()
         wantedResource = nextResource(-1)
       }
       if (e.key === 'ArrowRight') {
+        e.preventDefault()
         wantedResource = nextResource(1)
       }
 
-      if (wantedResource) setResourceKey(wantedResource)
+      if (wantedResource) {
+        switchToResource(wantedResource, categoryKey || undefined)
+      }
     }
   }
 
@@ -84,9 +61,7 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
               aria-expanded={expanded}
               aria-controls="collapseOne"
               onClick={() => setExpanded(!expanded)}>
-              <strong>
-                {selectedResource?.name ?? 'Parcourir les horaires..'}
-              </strong>
+              <strong>{resourceKey ?? 'Parcourir les horaires..'}</strong>
             </button>
           </h2>
           <div
@@ -98,8 +73,7 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
                   label="Type"
                   initialKey={categoryKey ?? null}
                   selectionHandler={newcat => {
-                    setResourceKey(null)
-                    setCategoryKey(newcat)
+                    switchToResource(undefined, newcat)
                   }}
                   items={mapObject(config.data, (k, v) => v.name)}
                 />
@@ -107,7 +81,10 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
                   <Select
                     label={`Choisissez parmi les ${selectedCategory.name.toLowerCase()}`}
                     initialKey={resourceKey ?? null}
-                    selectionHandler={setResourceKey}
+                    selectionHandler={key => {
+                      setExpanded(false)
+                      switchToResource(key, categoryKey || undefined)
+                    }}
                     items={mapObject(selectedCategory.items, (k, v) => v.name)}
                   />
                 )}

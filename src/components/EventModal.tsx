@@ -4,8 +4,9 @@ import parseDescription from '../utils/parseDescription'
 const EventModal = (props: {
   selectedEvent: EventApi
   close: Function
+  switchTo: (resource?: string, category?: string) => void
 }): JSX.Element => {
-  const { selectedEvent, close } = props
+  const { selectedEvent, close, switchTo } = props
 
   const description = selectedEvent.extendedProps.description
   const eventAttributes = parseDescription(description)
@@ -46,9 +47,18 @@ const EventModal = (props: {
                     <tr>
                       <th scope="row">Locaux</th>
                       <td>
-                        {eventAttributes.lieux.map(lieu => (
-                          <p key={lieu}>{lieu}</p>
-                        ))}
+                        <ul>
+                          {eventAttributes.lieux.map(lieu => (
+                            <li key={lieu}>
+                              <a
+                                onClick={() => {
+                                  switchTo(lieu, 'salles')
+                                }}>
+                                {lieu}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
                       </td>
                     </tr>
                   )}
@@ -69,7 +79,13 @@ const EventModal = (props: {
                       <th scope="row">Groupes</th>
                       <td>
                         {eventAttributes.groupes.map(groupe => (
-                          <p key={groupe}>{groupe}</p>
+                          <p
+                            onClick={() => {
+                              switchTo(groupe, 'groupes')
+                            }}
+                            key={groupe}>
+                            {groupe}
+                          </p>
                         ))}
                       </td>
                     </tr>
