@@ -38,15 +38,6 @@ const fetchCalendars = async (): Promise<CalendarConfig> => {
     }))
 }
 
-/**
- *
- * @param elements create a tuple (array, but with potentially different types)
- * @returns a tuple
- */
-function tuple<T extends any[]>(...elements: T) {
-  return elements
-}
-
-export { CalendarConfig, tuple }
+export { CalendarConfig }
 
 export default fetchCalendars

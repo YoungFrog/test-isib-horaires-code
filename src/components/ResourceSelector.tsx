@@ -1,64 +1,26 @@
-import { Dispatch, useCallback, useEffect, useState } from 'react'
-import { CalendarConfig, tuple } from '../utils/fetchCalendars'
+import { Dispatch, useEffect, useState } from 'react'
+import { CalendarConfig } from '../utils/fetchCalendars'
+import { Nullable, mapObject } from '../utils/types'
+import useSearchParams from '../hooks/useSearchParams'
 import Select from './Select'
 
 interface ResourceSelectorProps {
   config: CalendarConfig
-  updateUrl: Dispatch<string | null>
-}
-
-/**
- * Create a piece of state associated with a given parameter in the query string
- *
- * This hook returns an array [state, setState, resetState]
- * - state : the current value of the state (a string or undefined)
- * - setState : changes the current value
- *
- * @param queryParameterName The query param corresponding to this piece of state
- * @returns an array of [state, setState, resetState]
- */
-
-function useQueryParameterState(
-  queryParameterName: string,
-  defaultValue?: string
-) {
-  const grabCurrentParameterValue = useCallback(
-    () =>
-      new URL(location.href).searchParams.get(queryParameterName) ||
-      defaultValue,
-    [defaultValue, queryParameterName]
-  )
-
-  const [state, setState] = useState(grabCurrentParameterValue)
-  const updateStateAndQueryString = useCallback(
-    (newState?: string) => {
-      const url = new URL(window.location.href)
-      if (newState) {
-        url.searchParams.set(queryParameterName, newState)
-      } else {
-        url.searchParams.delete(queryParameterName)
-      }
-      history.pushState({}, '', url)
-      setState(newState)
-    },
-    [queryParameterName]
-  )
-
-  const resetStateToQueryString = useCallback(() => {
-    setState(grabCurrentParameterValue())
-  }, [grabCurrentParameterValue])
-  return tuple(state, updateStateAndQueryString, resetStateToQueryString)
+  updateUrl: Dispatch<Nullable<string>>
 }
 
 const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
   const { config, updateUrl } = props
 
-  const [categoryKey, setCategoryKey, resetCategoryKey] =
-    useQueryParameterState('type', config.default)
-  const [resourceKey, setResourceKey, resetResourceKey] =
-    useQueryParameterState('ressource')
+  const [categoryKey, setCategoryKey] = useState(null as Nullable<string>)
+  const [resourceKey, setResourceKey] = useState(null as Nullable<string>)
 
   const [expanded, setExpanded] = useState(!resourceKey)
+
+  useSearchParams([
+    ['type', categoryKey, setCategoryKey, config.default],
+    ['ressource', resourceKey, setResourceKey]
+  ])
 
   const selectedCategory = categoryKey ? config.data[categoryKey] : undefined
   const selectedResource = resourceKey
@@ -81,32 +43,6 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
       : defaultTitle
   }, [selectedResource])
 
-  /**
-   * Si l'utilisateur retourne à la page précédente, affiche le calendrier correspondant à l'URL
-   */
-  const popStateHandler = useCallback(
-    (e: PopStateEvent) => {
-      resetCategoryKey()
-      resetResourceKey()
-    },
-    [resetCategoryKey, resetResourceKey]
-  )
-
-  useEffect(() => {
-    window.addEventListener('popstate', popStateHandler)
-    return () => window.removeEventListener('popstate', popStateHandler)
-  })
-
-  type KeyType = string | number
-
-  function mapObject<T, S>(
-    obj: { [k: KeyType]: T },
-    func: (k: KeyType, v: T) => S
-  ): { [k: KeyType]: S } {
-    return Object.fromEntries(
-      Object.entries(obj).map(([k, v]) => [k, func(k, v)])
-    )
-  }
   return (
     <>
       <div className="accordion mb-3">
@@ -132,7 +68,7 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
                   label="Type"
                   initialKey={categoryKey ?? null}
                   selectionHandler={newcat => {
-                    setResourceKey()
+                    setResourceKey(null)
                     setCategoryKey(newcat)
                   }}
                   items={mapObject(config.data, (k, v) => v.name)}
