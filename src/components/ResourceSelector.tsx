@@ -1,35 +1,68 @@
 import { Dispatch, useCallback, useEffect, useState } from 'react'
-import { CalendarConfig } from '../utils/fetchCalendars'
+import { CalendarConfig, tuple } from '../utils/fetchCalendars'
 import Select from './Select'
 
 interface ResourceSelectorProps {
   config: CalendarConfig
   updateUrl: Dispatch<string | null>
 }
-interface AppState {
-  categoryKey?: string
-  resourceKey?: string
+
+/**
+ * Create a piece of state associated with a given parameter in the query string
+ *
+ * This hook returns an array [state, setState, resetState]
+ * - state : the current value of the state (a string or undefined)
+ * - setState : changes the current value
+ *
+ * @param queryParameterName The query param corresponding to this piece of state
+ * @returns an array of [state, setState, resetState]
+ */
+
+function useQueryParameterState(
+  queryParameterName: string,
+  defaultValue?: string
+) {
+  const grabCurrentParameterValue = useCallback(
+    () =>
+      new URL(location.href).searchParams.get(queryParameterName) ||
+      defaultValue,
+    [defaultValue, queryParameterName]
+  )
+
+  const [state, setState] = useState(grabCurrentParameterValue)
+  const updateStateAndQueryString = useCallback(
+    (newState?: string) => {
+      const url = new URL(window.location.href)
+      if (newState) {
+        url.searchParams.set(queryParameterName, newState)
+      } else {
+        url.searchParams.delete(queryParameterName)
+      }
+      history.pushState({}, '', url)
+      setState(newState)
+    },
+    [queryParameterName]
+  )
+
+  const resetStateToQueryString = useCallback(() => {
+    setState(grabCurrentParameterValue())
+  }, [grabCurrentParameterValue])
+  return tuple(state, updateStateAndQueryString, resetStateToQueryString)
 }
 
 const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
   const { config, updateUrl } = props
 
-  const getAppStateFromUrl = useCallback((): AppState => {
-    const search = new URLSearchParams(location.search)
-    const categoryKey = search.get('type') ?? config.default
-    const resourceKey = search.get('ressource') ?? undefined
-    return { categoryKey, resourceKey }
-  }, [config])
+  const [categoryKey, setCategoryKey, resetCategoryKey] =
+    useQueryParameterState('type', config.default)
+  const [resourceKey, setResourceKey, resetResourceKey] =
+    useQueryParameterState('ressource')
 
-  const [appState, setAppState] = useState(getAppStateFromUrl())
+  const [expanded, setExpanded] = useState(!resourceKey)
 
-  const [expanded, setExpanded] = useState(!appState.resourceKey)
-
-  const selectedCategory = appState.categoryKey
-    ? config.data[appState.categoryKey]
-    : undefined
-  const selectedResource = appState.resourceKey
-    ? selectedCategory?.items[appState.resourceKey]
+  const selectedCategory = categoryKey ? config.data[categoryKey] : undefined
+  const selectedResource = resourceKey
+    ? selectedCategory?.items[resourceKey]
     : undefined
 
   useEffect(() =>
@@ -48,42 +81,16 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
       : defaultTitle
   }, [selectedResource])
 
-  const categorySelectionHandler = (newCategoryKey: string) => {
-    setAppState({ categoryKey: newCategoryKey })
-  }
-
-  const updateWindowURL = (
-    url: URL,
-    urlKey: string,
-    value: string | undefined
-  ) => {
-    if (value) {
-      url.searchParams.set(urlKey, value)
-    } else {
-      url.searchParams.delete(urlKey)
-    }
-  }
-
-  const calSelectionHandler = useCallback(
-    (newResourceKey: string) => {
-      setAppState(state => ({ ...state, resourceKey: newResourceKey }))
-      setExpanded(false)
-
-      const url = new URL(window.location.href)
-      updateWindowURL(url, 'type', appState.categoryKey)
-      updateWindowURL(url, 'ressource', newResourceKey)
-
-      history.pushState({}, '', url)
-    },
-    [appState]
-  )
-
   /**
-   * Si l'utilisateur retourne à la page précédente, affiche le bon calendrier
+   * Si l'utilisateur retourne à la page précédente, affiche le calendrier correspondant à l'URL
    */
-  const popStateHandler = useCallback((e: PopStateEvent) => {
-    setAppState(getAppStateFromUrl())
-  }, [])
+  const popStateHandler = useCallback(
+    (e: PopStateEvent) => {
+      resetCategoryKey()
+      resetResourceKey()
+    },
+    [resetCategoryKey, resetResourceKey]
+  )
 
   useEffect(() => {
     window.addEventListener('popstate', popStateHandler)
@@ -95,7 +102,7 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
   function mapObject<T, S>(
     obj: { [k: KeyType]: T },
     func: (k: KeyType, v: T) => S
-  ) {
+  ): { [k: KeyType]: S } {
     return Object.fromEntries(
       Object.entries(obj).map(([k, v]) => [k, func(k, v)])
     )
@@ -123,15 +130,18 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
               <div className="row">
                 <Select
                   label="Type"
-                  initialKey={appState.categoryKey ?? null}
-                  selectionHandler={categorySelectionHandler}
+                  initialKey={categoryKey ?? null}
+                  selectionHandler={newcat => {
+                    setResourceKey()
+                    setCategoryKey(newcat)
+                  }}
                   items={mapObject(config.data, (k, v) => v.name)}
                 />
                 {selectedCategory && (
                   <Select
                     label={`Choisissez parmi les ${selectedCategory.name.toLowerCase()}`}
-                    initialKey={appState.resourceKey ?? null}
-                    selectionHandler={calSelectionHandler}
+                    initialKey={resourceKey ?? null}
+                    selectionHandler={setResourceKey}
                     items={mapObject(selectedCategory.items, (k, v) => v.name)}
                   />
                 )}
