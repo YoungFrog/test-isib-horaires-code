@@ -1,13 +1,9 @@
-import FullCalendar, {
-  DatesSetArg,
-  EventApi,
-  EventClickArg
-} from '@fullcalendar/react'
+import FullCalendar, { EventApi, EventClickArg } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import iCalendarPlugin from '@fullcalendar/icalendar'
 import frLocale from '@fullcalendar/core/locales/fr'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import momentTimezonePlugin from '@fullcalendar/moment-timezone'
 import { Nullable } from '../utils/types'
 import useSearchParams from '../hooks/useSearchParams'
@@ -30,19 +26,28 @@ const App = (props: CalendarConfig): JSX.Element => {
 
   const [categoryKey, setCategoryKey] = useState<Nullable<string>>(null)
   const [resourceKey, setResourceKey] = useState<Nullable<string>>(null)
+  const calendarRef = useRef<FullCalendar>(null)
+  const calendar = calendarRef.current
+  // ;(window as any).fc = calendar // for testing/debugging purposes
 
-  const [startDate, setStartDate] = useState<Nullable<string>>(
-    new URL(location.href).searchParams.get('startdate')
-  )
   useSearchParams([
     ['type', categoryKey, setCategoryKey, props.default],
     ['ressource', resourceKey, setResourceKey],
-    ['startdate', null /* remove from URL */]
+    ['startdate', null /* remove from URL */],
+    ['view', null]
   ])
 
   const currentViewUrl = () => {
     const url = new URL(location.href)
-    if (startDate) url.searchParams.set('startdate', startDate)
+    const startDate = calendar?.getApi().getDate()
+    if (startDate) {
+      startDate?.setHours(12) // since the timezone is fixed to Europe/Brussels, "today at noon" is always the same as "today in GMT"
+      url.searchParams.set('startdate', startDate.toISOString().slice(0, 10))
+    }
+    const view = calendar?.getApi().view.type
+    if (view) {
+      url.searchParams.set('view', view)
+    }
     return url.toString()
   }
 
@@ -89,14 +94,6 @@ const App = (props: CalendarConfig): JSX.Element => {
     [props]
   )
 
-  const datesSetHandler = useCallback((dateInfo: DatesSetArg) => {
-    // setTimeout is a cheap workaround for problems such as
-    // - https://github.com/fullcalendar/fullcalendar-react/issues/185 <- could be this
-    // - https://github.com/fullcalendar/fullcalendar-react/issues/131 <- or this
-    // - https://github.com/fullcalendar/fullcalendar-react/issues/97  <- or maybe this ?
-    setTimeout(() => setStartDate(dateInfo.startStr), 0)
-  }, [])
-
   if (!props.data || !props.default || !props.root) {
     return <pre>Pas de chance, le site est cassé..</pre>
   }
@@ -117,13 +114,16 @@ const App = (props: CalendarConfig): JSX.Element => {
         />
 
         <FullCalendar
+          ref={calendarRef}
           plugins={[
             timeGridPlugin,
             dayGridPlugin,
             iCalendarPlugin,
             momentTimezonePlugin
           ]}
-          initialView="timeGridWeek"
+          initialView={
+            new URL(location.href).searchParams.get('view') || 'timeGridWeek'
+          }
           weekends={true}
           hiddenDays={[0]}
           headerToolbar={{
@@ -156,8 +156,9 @@ const App = (props: CalendarConfig): JSX.Element => {
 
             return event
           }}
-          datesSet={datesSetHandler}
-          initialDate={startDate || undefined}
+          initialDate={
+            new URL(location.href).searchParams.get('startdate') || undefined
+          }
           viewClassNames={() => [icsUrl ? 'visible' : 'invisible']}
           customButtons={{
             viewlink: {
