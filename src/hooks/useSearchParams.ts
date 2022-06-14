@@ -16,7 +16,7 @@ function useSearchParams(
   params: [
     queryParamName: string,
     state: Nullable<string>,
-    setState: Dispatch<SetStateAction<Nullable<string>>>,
+    setState?: Dispatch<SetStateAction<Nullable<string>>>,
     defaultState?: string
   ][]
 ) {
@@ -31,7 +31,7 @@ function useSearchParams(
       const wantedState = search.has(queryParamName)
         ? search.get(queryParamName)
         : defaultState ?? null
-      if (wantedState !== state) {
+      if (setState && wantedState !== state) {
         setState(wantedState)
       }
     }
