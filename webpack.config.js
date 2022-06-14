@@ -3,6 +3,7 @@ const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin')
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin')
 
 module.exports = {
+  devtool: 'cheap-module-source-map',
   plugins: [
     new MomentTimezoneDataPlugin({
       matchZones: 'Europe/Brussels',
