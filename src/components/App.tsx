@@ -1,4 +1,8 @@
-import FullCalendar, { EventApi, EventClickArg } from '@fullcalendar/react'
+import FullCalendar, {
+  DatesSetArg,
+  EventApi,
+  EventClickArg
+} from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import iCalendarPlugin from '@fullcalendar/icalendar'
@@ -24,12 +28,16 @@ const findCategoryKey = (config: CalendarConfig, resourceKey: string) => {
 const App = (props: CalendarConfig): JSX.Element => {
   const [selectedEvent, setSelectedEvent] = useState(null as EventApi | null)
 
-  const [categoryKey, setCategoryKey] = useState(null as Nullable<string>)
-  const [resourceKey, setResourceKey] = useState(null as Nullable<string>)
+  const [categoryKey, setCategoryKey] = useState<Nullable<string>>(null)
+  const [resourceKey, setResourceKey] = useState<Nullable<string>>(null)
 
+  const [startDate, setStartDate] = useState<Nullable<string>>(
+    new URL(location.href).searchParams.get('startdate')
+  )
   useSearchParams([
     ['type', categoryKey, setCategoryKey, props.default],
-    ['ressource', resourceKey, setResourceKey]
+    ['ressource', resourceKey, setResourceKey],
+    ['startdate', null /* remove from URL */]
   ])
 
   const selectedResource =
@@ -74,6 +82,14 @@ const App = (props: CalendarConfig): JSX.Element => {
     },
     [props]
   )
+
+  const datesSetHandler = useCallback((dateInfo: DatesSetArg) => {
+    // setTimeout is a cheap workaround for problems such as
+    // - https://github.com/fullcalendar/fullcalendar-react/issues/185 <- could be this
+    // - https://github.com/fullcalendar/fullcalendar-react/issues/131 <- or this
+    // - https://github.com/fullcalendar/fullcalendar-react/issues/97  <- or maybe this ?
+    setTimeout(() => setStartDate(dateInfo.startStr), 0)
+  }, [])
 
   if (!props.data || !props.default || !props.root) {
     return <pre>Pas de chance, le site est cassé..</pre>
@@ -134,6 +150,8 @@ const App = (props: CalendarConfig): JSX.Element => {
 
             return event
           }}
+          datesSet={datesSetHandler}
+          initialDate={startDate || undefined}
           viewClassNames={() => [icsUrl ? 'visible' : 'invisible']}
         />
 
