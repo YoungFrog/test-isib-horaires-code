@@ -40,6 +40,12 @@ const App = (props: CalendarConfig): JSX.Element => {
     ['startdate', null /* remove from URL */]
   ])
 
+  const currentViewUrl = () => {
+    const url = new URL(location.href)
+    if (startDate) url.searchParams.set('startdate', startDate)
+    return url.toString()
+  }
+
   const selectedResource =
     resourceKey && categoryKey
       ? props.data[categoryKey].items[resourceKey]
@@ -121,7 +127,7 @@ const App = (props: CalendarConfig): JSX.Element => {
           weekends={true}
           hiddenDays={[0]}
           headerToolbar={{
-            start: 'prev today next',
+            start: 'prev today next viewlink',
             center: 'title',
             end: 'dayGridMonth timeGridWeek timeGridDay'
           }}
@@ -153,6 +159,14 @@ const App = (props: CalendarConfig): JSX.Element => {
           datesSet={datesSetHandler}
           initialDate={startDate || undefined}
           viewClassNames={() => [icsUrl ? 'visible' : 'invisible']}
+          customButtons={{
+            viewlink: {
+              text: 'Copy current view URL',
+              click: async () => {
+                await navigator.clipboard.writeText(currentViewUrl())
+              }
+            }
+          }}
         />
 
         {icsUrl && <CalLink link={icsUrl} />}
