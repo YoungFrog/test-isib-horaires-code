@@ -1,4 +1,4 @@
-import { Dispatch, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { CalendarConfig } from '../utils/fetchCalendars'
 import { Nullable, mapObject } from '../utils/types'
 import Select from './Select'
@@ -13,9 +13,9 @@ interface ResourceSelectorProps {
 const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
   const { config, categoryKey, resourceKey, switchToResource } = props
 
-  const [expanded, setExpanded] = useState(!resourceKey)
+  const [wantExpanded, setWantExpanded] = useState(false)
   const selectedCategory = categoryKey ? config.data[categoryKey] : undefined
-
+  const collapsed = !wantExpanded && !!resourceKey
   const nextResource = useCallback(
     (delta: number) => {
       if (!(categoryKey && resourceKey)) return
@@ -55,16 +55,17 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
         <div className="accordion-item">
           <h2 className="accordion-header" id="headingOne">
             <button
-              className={`accordion-button ${expanded ? '' : 'collapsed'}`}
+              className={`accordion-button ${collapsed ? 'collapsed' : ''}`}
               type="button"
-              aria-expanded={expanded}
+              aria-expanded={!collapsed}
               aria-controls="collapseOne"
-              onClick={() => setExpanded(!expanded)}>
+              /* setWantExpanded(collapsed) is equivalent to: setWantExpanded(!expanded) */
+              onClick={() => setWantExpanded(collapsed)}>
               <strong>{resourceKey ?? 'Parcourir les horaires..'}</strong>
             </button>
           </h2>
           <div
-            className={`accordion-collapse collapse ${expanded ? 'show' : ''}`}
+            className={`accordion-collapse collapse ${collapsed ? '' : 'show'}`}
             aria-labelledby="headingOne">
             <div className="accordion-body">
               <div className="row">
@@ -81,7 +82,7 @@ const ResourceSelector = (props: ResourceSelectorProps): JSX.Element => {
                     label={`Choisissez parmi les ${selectedCategory.name.toLowerCase()}`}
                     initialKey={resourceKey ?? null}
                     selectionHandler={key => {
-                      setExpanded(false)
+                      setWantExpanded(false)
                       switchToResource(key, categoryKey || undefined)
                     }}
                     items={mapObject(selectedCategory.items, (k, v) => v.name)}
