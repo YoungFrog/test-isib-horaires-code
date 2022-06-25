@@ -113,6 +113,14 @@ const App = (props: CalendarConfig): JSX.Element => {
         case 'w':
           calendar?.getApi().changeView('timeGridWeek')
           break
+        case 'g':
+          // eslint-disable-next-line no-case-declarations
+          const target = prompt(
+            'What do you want to display ?',
+            'B111'
+          )?.toUpperCase()
+          if (target) switchToResource(target)
+          break
         default:
           found = false
       }
