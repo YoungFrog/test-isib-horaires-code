@@ -21,15 +21,15 @@ if ! [[ -d ical/ ]] || ! [[ -f calendars.json ]]; then
 
     warn "no ical/ or config file found. Trying to download them..."
     set -o pipefail
-    reponame=heb-esi.github.io
+    reponame=horaires-ics
     repobase=https://github.com/HEB-ESI
     branch=gh-pages
-    if wget -O- "$repobase/$repourl/archive/refs/heads/$branch.tar.gz" |
+    if wget -O- "$repobase/$reponame/archive/refs/heads/$branch.tar.gz" |
             tar -zx --strip-components=1 "$reponame-$branch/ical" "$reponame-$branch/calendars.json"
     then
         warn "that seems to have worked. great !"
     else
-        die "Could not retrieve ical + config file. Grab 'em at $repobase/$repourl/tree/$branch/ical"
+        die "Could not retrieve ical + config file. Grab 'em at $repobase/$reponame/tree/$branch/ical"
     fi
     
 fi

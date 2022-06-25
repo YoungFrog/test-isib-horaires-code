@@ -2,4 +2,4 @@
 .PHONY: serve
 
 serve:
-	sh serve
+	bash serve
