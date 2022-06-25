@@ -26,14 +26,14 @@ const Footer = (): JSX.Element => {
               <i>
                 - v1 « À l&rsquo;arrache » par Pierre, Nicolas (Némo) et
                 Frédéric (Sébastien)
-                <br />- v2 « Marie revisitée » par Andrews, v2.1 « Peu me chaut » par Nicolas(Némo)
+                <br />- v2 « Marie revisitée » par Andrews, v2.1 « Peu me chaut » par Nicolas (Némo)
               </i>
             </p>
             <p className="text-muted small">
               <a href="https://git.esi-bru.be/pbt/displaytimetable/-/raw/master/LICENSE">
                 MIT licence
               </a>{' '}
-              - 2020-2021
+              - 2020-2022
             </p>
           </div>
         </div>
