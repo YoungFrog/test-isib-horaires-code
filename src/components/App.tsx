@@ -199,6 +199,12 @@ const App = (props: CalendarConfig): JSX.Element => {
               }
             }
           }}
+          eventSourceFailure={errorObj => {
+            console.log(errorObj)
+            alert(
+              'could not fetch events. please check connection and refresh.'
+            )
+          }}
         />
 
         {icsUrl && <CalLink link={icsUrl} />}
