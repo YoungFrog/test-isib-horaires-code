@@ -19,8 +19,7 @@ const Footer = (): JSX.Element => {
               </a>
               <br />
               <a href="mailto:esi-horaires@he2b.be?subject=Mail from horaires.esi-bru.be /">
-                <i className="fa fa-paper-plane" aria-hidden="true" />
-                Contact horaires
+                <i className="fa fa-paper-plane" aria-hidden="true" /> Contact horaires
               </a>
             </p>
             <p className="text-muted">
