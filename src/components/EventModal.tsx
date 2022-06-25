@@ -1,4 +1,5 @@
 import { EventApi } from '@fullcalendar/react'
+import { useEffect } from 'react'
 import parseDescription from '../utils/parseDescription'
 
 const EventModal = (props: {
@@ -10,6 +11,17 @@ const EventModal = (props: {
 
   const description = selectedEvent.extendedProps.description
   const eventAttributes = parseDescription(description)
+
+  const listenEscapeKey = (e: KeyboardEvent) => {
+    if (!e.shiftKey && !e.ctrlKey && !e.altKey && e.key === 'Escape') {
+      close()
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', listenEscapeKey)
+    return () => window.removeEventListener('keydown', listenEscapeKey)
+  })
 
   return (
     <>

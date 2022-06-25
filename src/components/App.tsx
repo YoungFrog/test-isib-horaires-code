@@ -3,7 +3,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import iCalendarPlugin from '@fullcalendar/icalendar'
 import frLocale from '@fullcalendar/core/locales/fr'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import momentTimezonePlugin from '@fullcalendar/moment-timezone'
 import { Nullable } from '../utils/types'
 import useSearchParams from '../hooks/useSearchParams'
@@ -93,6 +93,37 @@ const App = (props: CalendarConfig): JSX.Element => {
     },
     [props]
   )
+
+  const listenKeys = (e: KeyboardEvent) => {
+    if (!e.shiftKey && !e.ctrlKey && !e.altKey) {
+      let found = true
+      switch (e.key) {
+        case 'ArrowLeft':
+          calendar?.getApi().prev()
+          break
+        case 'ArrowRight':
+          calendar?.getApi().next()
+          break
+        case 'm':
+          calendar?.getApi().changeView('dayGridMonth')
+          break
+        case 'd':
+          calendar?.getApi().changeView('timeGridDay')
+          break
+        case 'w':
+          calendar?.getApi().changeView('timeGridWeek')
+          break
+        default:
+          found = false
+      }
+      if (found) e.preventDefault()
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', listenKeys)
+    return () => window.removeEventListener('keydown', listenKeys)
+  })
 
   if (!props.data || !props.default || !props.root) {
     return <pre>Pas de chance, le site est cassé..</pre>
