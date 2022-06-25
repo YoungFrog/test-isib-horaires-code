@@ -155,14 +155,15 @@ Le fichier de configuration `calendars.json` ressemble a ceci:
 Veuillez respecter les points suivants si vous voulez survivre :
 
 - Les elements `key` doivent impérativement être uniques dans tout le fichier
-- Les elements `key` doit uniquement contenir des caractères de type `A-Z`, `a-z` ou `-`
-- Les liens `calendar` est un lien relatif vers les icals
-- La case `name` est affiché a l'écran, le `key` est utilisé par react et pour les liens
+- Les elements `key` doivent uniquement contenir des caractères de type `A-Z`, `a-z` ou `-`
+- Les liens `calendar` sont un lien relatif vers les icals
+- La case `name` est affiché à l'écran, le `key` est utilisé par _react_ et pour les liens
 
 Un tel fichier peut être généré à partir des icals. Depuis la racine du dépôt:
 1. placer les iCal dans `/{groupes,cours,profs,salles}`
 2. placer le fichier `/config/personnel.json` depuis https://github.com/HEB-ESI/he2besi-web/raw/master/jekyllsrc/_data/personnels.json
 3. Generer le fichier avec l'une des deux commandes ci-dessous
+
 ```bash
 $ yarn generate:config ical/2021-2022/q2/
 $ npm run generate:config -- ical/2021-2022/q2/
@@ -182,7 +183,8 @@ Have fun!
 - Andrew Sassoye
 
 *v1 « À l'arrache » par Pierre, Nicolas (Némo) et Frédéric (Sébastien)*  
-*v2 « Marie revisitée » par Andrews*
+*v2 « Marie revisitée » par Andrews*  
+*v2.1 « Peu me chaut » par Nicolas (Némo)*  
 
 [^1]: We used to use [Leonaard project][0] (dead link) together with [ical.js][2] to convert iCalendar (ics) to JSON.
 Nowadays FullCalendar fully supports ics as a [Event Source][3] (still using ical.js).

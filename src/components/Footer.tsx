@@ -27,7 +27,7 @@ const Footer = (): JSX.Element => {
               <i>
                 - v1 « À l&rsquo;arrache » par Pierre, Nicolas (Némo) et
                 Frédéric (Sébastien)
-                <br />- v2 « Marie revisitée » par Andrews
+                <br />- v2 « Marie revisitée » par Andrews, v2.1 « Peu me chaut » par Nicolas(Némo)
               </i>
             </p>
             <p className="text-muted small">
