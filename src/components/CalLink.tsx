@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 const CalLink = ({ link }: { link: string }): JSX.Element => {
-  const webCalString: string = link.replace(/^http/, 'webcal')
+  const webCalString: string = link.replace(/^https?/, 'webcal')
   const gogoleUrl: string = `www.google.com/calendar/render?cid=${webCalString}`
   const [copied, setCopied] = useState(false)
 
