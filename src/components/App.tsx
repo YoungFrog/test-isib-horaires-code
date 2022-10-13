@@ -66,9 +66,9 @@ const App = (props: CalendarConfig): JSX.Element => {
     () =>
       icsUrl
         ? {
-            url: icsUrl,
-            format: 'ics'
-          }
+          url: icsUrl,
+          format: 'ics'
+        }
         : undefined,
     [icsUrl]
   )
@@ -76,20 +76,17 @@ const App = (props: CalendarConfig): JSX.Element => {
   useTitle(selectedResource)
 
   /**
-   * Generic way to allow children component to switch to a new resource
+   * Generic way to allow children component to request a switch to a new resource
    * based on resourceKey and (optionaly) categoryKey
    */
   const switchToResource = useCallback(
     (resourceKey?: string, categoryKey?: string) => {
-      let wantedCategoryKey: Nullable<string> = categoryKey ?? null
-      const wantedResourceKey: Nullable<string> = resourceKey ?? null
-
-      if (wantedResourceKey && !wantedCategoryKey) {
-        wantedCategoryKey = findCategoryKey(props, wantedResourceKey)
-      }
       setSelectedEvent(null)
-      setCategoryKey(wantedCategoryKey)
-      setResourceKey(wantedResourceKey)
+      setCategoryKey(
+        categoryKey ??
+          (resourceKey ? findCategoryKey(props, resourceKey) : null)
+      )
+      setResourceKey(resourceKey ?? null)
     },
     [props]
   )
