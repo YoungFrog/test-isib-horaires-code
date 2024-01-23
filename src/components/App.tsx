@@ -183,15 +183,6 @@ const App = (props: CalendarConfig): JSX.Element => {
           contentHeight="75vh"
           stickyHeaderDates={true}
           eventClick={selectEventHandler}
-          eventDataTransform={event => {
-            const eventProps = event.extendedProps
-            const location = eventProps?.location
-            if (location && !event.title?.endsWith(location)) {
-              event.title = `${event.title} - ${location}`
-            }
-
-            return event
-          }}
           initialDate={
             new URL(location.href).searchParams.get('startdate') || undefined
           }
