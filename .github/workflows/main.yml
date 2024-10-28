@@ -8,7 +8,7 @@ on:
 
 # defined as a secret in order to be repository-dependent
 env:
-  CONFIG_FILE_URL: ${{ secrets.CALENDARS_JSON }}
+  CONFIG_FILE_URL: ${{ vars.CALENDARS_JSON }}
 
 jobs:
   build:
